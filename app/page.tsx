@@ -171,70 +171,6 @@ export default function LandingPage() {
               buttonVariant="outline"
             />
           </div>
-          <div className="mt-12 text-center">
-            <p className="text-sm text-muted-foreground">
-              Todos os planos incluem teste grátis de 14 dias. Não é necessário cartão de crédito.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section id="testimonials" className="container py-16 md:py-24">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">O que nossos clientes dizem</h2>
-          <p className="mx-auto max-w-[700px] text-muted-foreground">
-            Empresas de todos os tamanhos estão aumentando suas conversões com o WhatsApp Manager
-          </p>
-        </div>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <TestimonialCard
-            quote="Aumentamos nossas conversões em 43% no primeiro mês de uso. A plataforma é intuitiva e os relatórios são excelentes."
-            author="Ana Silva"
-            role="Marketing Manager, TechCorp"
-          />
-          <TestimonialCard
-            quote="A automação de funis nos permitiu escalar nosso atendimento sem aumentar a equipe. Resultado incrível!"
-            author="Carlos Mendes"
-            role="CEO, Mendes E-commerce"
-          />
-          <TestimonialCard
-            quote="O suporte é excepcional e a plataforma é muito completa. Conseguimos segmentar nossos clientes de forma muito eficiente."
-            author="Juliana Costa"
-            role="Diretora de Vendas, Grupo Nexus"
-          />
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="bg-card/50 py-16 md:py-24">
-        <div className="container">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">Perguntas frequentes</h2>
-            <p className="mx-auto max-w-[700px] text-muted-foreground">Tire suas dúvidas sobre nossa plataforma</p>
-          </div>
-          <div className="mx-auto grid max-w-3xl gap-6">
-            <FaqItem
-              question="Como funciona o período de teste gratuito?"
-              answer="Você tem acesso a todas as funcionalidades do plano escolhido por 14 dias, sem necessidade de cartão de crédito. Ao final do período, você pode escolher um plano para continuar usando a plataforma."
-            />
-            <FaqItem
-              question="Preciso ter uma conta WhatsApp Business API?"
-              answer="Sim, você precisa ter uma conta aprovada no WhatsApp Business API. Podemos auxiliar no processo de solicitação e aprovação da sua conta."
-            />
-            <FaqItem
-              question="Posso mudar de plano depois?"
-              answer="Sim, você pode fazer upgrade ou downgrade do seu plano a qualquer momento. As mudanças são aplicadas no próximo ciclo de cobrança."
-            />
-            <FaqItem
-              question="Como funciona o suporte?"
-              answer="Oferecemos suporte por email para todos os planos. Clientes do plano Profissional têm acesso a suporte prioritário, e clientes Enterprise contam com um gerente de conta dedicado."
-            />
-            <FaqItem
-              question="A plataforma é compatível com quais dispositivos?"
-              answer="Nossa plataforma é baseada em nuvem e acessível por qualquer navegador moderno em computadores, tablets e smartphones."
-            />
-          </div>
         </div>
       </section>
 
@@ -290,16 +226,6 @@ export default function LandingPage() {
                     Planos
                   </Link>
                 </li>
-                <li>
-                  <Link href="#testimonials" className="text-muted-foreground hover:text-foreground">
-                    Depoimentos
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#faq" className="text-muted-foreground hover:text-foreground">
-                    FAQ
-                  </Link>
-                </li>
               </ul>
             </div>
             <div>
@@ -308,16 +234,6 @@ export default function LandingPage() {
                 <li>
                   <Link href="/sobre" className="text-muted-foreground hover:text-foreground">
                     Sobre nós
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="text-muted-foreground hover:text-foreground">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/carreiras" className="text-muted-foreground hover:text-foreground">
-                    Carreiras
                   </Link>
                 </li>
                 <li>
@@ -338,11 +254,6 @@ export default function LandingPage() {
                 <li>
                   <Link href="/privacidade" className="text-muted-foreground hover:text-foreground">
                     Política de Privacidade
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/cookies" className="text-muted-foreground hover:text-foreground">
-                    Política de Cookies
                   </Link>
                 </li>
               </ul>
@@ -422,34 +333,6 @@ function PricingCard({
           </Button>
         </Link>
       </CardFooter>
-    </Card>
-  )
-}
-
-function TestimonialCard({ quote, author, role }: { quote: string; author: string; role: string }) {
-  return (
-    <Card className="border-border bg-card">
-      <CardContent className="pt-6">
-        <div className="mb-4 text-4xl">"</div>
-        <p className="mb-4 text-muted-foreground">{quote}</p>
-        <div>
-          <p className="font-medium">{author}</p>
-          <p className="text-sm text-muted-foreground">{role}</p>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  return (
-    <Card className="border-border bg-card">
-      <CardHeader>
-        <CardTitle className="text-lg">{question}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{answer}</p>
-      </CardContent>
     </Card>
   )
 }

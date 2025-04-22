@@ -20,23 +20,23 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Simulação de verificação de autenticação
-  // Em um ambiente real, você verificaria um cookie ou token JWT
   const isAuthenticated = request.cookies.has("auth")
 
-  // Se o usuário não está autenticado e tenta acessar uma rota do dashboard
-  if (!isAuthenticated && dashboardPaths.some((path) => pathname.startsWith(path))) {
-    return NextResponse.redirect(new URL("/auth/login", request.url))
-  }
+  // Verificação mais precisa para rotas do dashboard
+  const isDashboardPath = dashboardPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`))
 
-  // Se o usuário está autenticado e tenta acessar a página inicial
-  if (isAuthenticated && pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
+  // Se o usuário não está autenticado e tenta acessar uma rota do dashboard
+  if (!isAuthenticated && isDashboardPath) {
+    return NextResponse.redirect(new URL("/auth/login", request.url))
   }
 
   // Se o usuário está autenticado e tenta acessar páginas de autenticação
   if (isAuthenticated && pathname.startsWith("/auth/")) {
     return NextResponse.redirect(new URL("/dashboard", request.url))
   }
+
+  // Não redirecionamos mais usuários autenticados da página inicial
+  // Isso permite que todos os usuários acessem a landing page
 
   return NextResponse.next()
 }
