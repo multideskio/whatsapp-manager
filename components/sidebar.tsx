@@ -2,61 +2,52 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  BarChart3,
-  Contact,
-  FolderKanban,
-  LayoutDashboard,
-  MessageSquare,
-  Send,
-  Settings,
-  Tag,
-  LayoutTemplateIcon as Templates,
-} from "lucide-react"
+import { BarChart3, Contact, FolderKanban, LayoutDashboard, MessageSquare, Send, Settings, Tag, LayoutTemplateIcon as Templates } from 'lucide-react'
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
+// Atualizar as rotas no array sidebarItems
 const sidebarItems = [
   {
     name: "Dashboard",
-    href: "/dashboard",
+    href: "/dashboard/dashboard",
     icon: LayoutDashboard,
   },
   {
     name: "Contatos",
-    href: "/contatos",
+    href: "/dashboard/contatos",
     icon: Contact,
   },
   {
     name: "Categorias",
-    href: "/categorias",
+    href: "/dashboard/categorias",
     icon: Tag,
   },
   {
     name: "Campanhas",
-    href: "/campanhas",
+    href: "/dashboard/campanhas",
     icon: MessageSquare,
   },
   {
     name: "Funis",
-    href: "/funis",
+    href: "/dashboard/funis",
     icon: FolderKanban,
   },
   {
     name: "Templates",
-    href: "/templates",
+    href: "/dashboard/templates",
     icon: Templates,
   },
   {
     name: "Disparos",
-    href: "/disparos",
+    href: "/dashboard/disparos",
     icon: Send,
   },
   {
     name: "Configurações",
-    href: "/configuracoes",
+    href: "/dashboard/configuracoes",
     icon: Settings,
   },
 ]

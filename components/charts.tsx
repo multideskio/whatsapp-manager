@@ -22,7 +22,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 const labels = ["01/05", "02/05", "03/05", "04/05", "05/05", "06/05", "07/05"]
 
 export function LineChart() {
-  const chartRef = useRef<HTMLDivElement>(null)
+  const chartRef = useRef<HTMLDivElement | null>(null)
   const { width } = useResizeObserver(chartRef)
   const { theme } = useTheme()
   const isDark = theme === "dark"
@@ -100,7 +100,7 @@ export function LineChart() {
 }
 
 export function BarChart() {
-  const chartRef = useRef<HTMLDivElement>(null)
+  const chartRef = useRef<HTMLDivElement | null>(null)
   const { width } = useResizeObserver(chartRef)
   const { theme } = useTheme()
   const isDark = theme === "dark"

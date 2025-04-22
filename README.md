@@ -16,6 +16,9 @@ O WhatsApp Campaign Manager é uma plataforma completa para gerenciamento de cam
 - **Monitoramento de Disparos**: Acompanhamento em tempo real do status de cada mensagem
 - **Configurações**: Integração com Meta Business API e configuração de webhooks
 - **Tema Escuro**: Suporte completo a tema escuro em toda a aplicação
+- **Integração SMS**: Envio de SMS como alternativa ou fallback para mensagens WhatsApp
+- **Landing Page**: Página de marketing com planos e preços
+- **Autenticação**: Sistema de login, cadastro e recuperação de senha
 
 ## Tecnologias Utilizadas
 
@@ -24,7 +27,7 @@ O WhatsApp Campaign Manager é uma plataforma completa para gerenciamento de cam
 - **Gráficos**: Chart.js, React-Chartjs-2
 - **Estilização**: Tailwind CSS
 - **Formulários**: React Hook Form (implícito nos componentes)
-- **Integração**: WhatsApp Business API, Meta API
+- **Integração**: WhatsApp Business API, Meta API, SMS APIs (Twilio, Zenvia, etc.)
 
 ## Estrutura do Projeto
 
@@ -32,14 +35,24 @@ O WhatsApp Campaign Manager é uma plataforma completa para gerenciamento de cam
 whatsapp-dashboard/
 ├── app/                    # Rotas e páginas (App Router)
 │   ├── layout.tsx          # Layout principal
-│   ├── page.tsx            # Dashboard principal
-│   ├── campanhas/          # Gerenciamento de campanhas
-│   ├── categorias/         # Gerenciamento de categorias
-│   ├── configuracoes/      # Configurações do sistema
-│   ├── contatos/           # Gerenciamento de contatos
-│   ├── disparos/           # Monitoramento de disparos
-│   ├── funis/              # Gerenciamento de funis
-│   └── templates/          # Gerenciamento de templates
+│   ├── marketing/          # Páginas de marketing (landing page)
+│   │   ├── page.tsx        # Landing page principal
+│   │   └── layout.tsx      # Layout para páginas de marketing
+│   ├── dashboard/          # Área administrativa
+│   │   ├── page.tsx        # Dashboard principal
+│   │   ├── layout.tsx      # Layout para dashboard
+│   │   ├── campanhas/      # Gerenciamento de campanhas
+│   │   ├── categorias/     # Gerenciamento de categorias
+│   │   ├── configuracoes/  # Configurações do sistema
+│   │   ├── contatos/       # Gerenciamento de contatos
+│   │   ├── disparos/       # Monitoramento de disparos
+│   │   ├── funis/          # Gerenciamento de funis
+│   │   └── templates/      # Gerenciamento de templates
+│   └── auth/               # Páginas de autenticação
+│       ├── login/          # Login
+│       ├── cadastro/       # Cadastro
+│       ├── recuperar/      # Recuperação de senha
+│       └── layout.tsx      # Layout para autenticação
 ├── components/             # Componentes reutilizáveis
 │   ├── charts.tsx          # Componentes de gráficos
 │   ├── dashboard-cards.tsx # Cards do dashboard
@@ -61,6 +74,7 @@ whatsapp-dashboard/
 │   └── use-resize-observer.ts # Hook para observar redimensionamento
 ├── lib/                    # Utilitários e funções auxiliares
 │   └── utils.ts            # Funções utilitárias
+├── middleware.ts           # Middleware para autenticação e redirecionamentos
 ├── public/                 # Arquivos estáticos
 └── tailwind.config.ts      # Configuração do Tailwind CSS
 \`\`\`
@@ -132,7 +146,16 @@ Configurações técnicas da plataforma:
 - Credenciais da API Meta
 - Configuração de webhooks
 - Gerenciamento de números WABA
+- Integração com provedores de SMS
 - Configurações de eventos e notificações
+
+### Integração SMS
+
+Configuração para envio de SMS como alternativa ao WhatsApp:
+- Suporte a múltiplos provedores (Twilio, Zenvia, Infobip, etc.)
+- Configuração de URL da API e chaves de autenticação
+- Opção de fallback automático para SMS quando WhatsApp falha
+- Personalização de ID de remetente
 
 ## Status dos Envios
 
@@ -151,6 +174,15 @@ O sistema oferece suporte completo a tema escuro:
 - Cores otimizadas para leitura em ambientes escuros
 - Transição suave entre temas claro e escuro
 - Persistência da preferência do usuário
+
+## Autenticação
+
+O sistema inclui um fluxo completo de autenticação:
+- Login com email e senha
+- Cadastro de novos usuários
+- Recuperação de senha
+- Proteção de rotas via middleware
+- Redirecionamentos inteligentes baseados no estado de autenticação
 
 ## Instalação e Configuração
 
@@ -182,6 +214,8 @@ O sistema oferece suporte completo a tema escuro:
    META_APP_SECRET=seu_app_secret
    META_ACCESS_TOKEN=seu_token_de_acesso
    META_BUSINESS_ID=seu_business_id
+   SMS_API_KEY=sua_chave_api_sms
+   SMS_API_URL=url_api_sms
    \`\`\`
 
 4. Inicie o servidor de desenvolvimento:
@@ -202,16 +236,28 @@ Para utilizar o sistema, é necessário:
 3. Configurar os webhooks para receber notificações
 4. Obter aprovação para os templates de mensagens
 
+## Integração com Provedores de SMS
+
+O sistema suporta integração com diversos provedores de SMS:
+
+1. Configure o provedor nas configurações do sistema
+2. Adicione a URL da API e a chave de API
+3. Configure o ID do remetente conforme as regras do provedor
+4. Opcionalmente, ative o fallback automático para SMS
+
 ## Melhorias Implementadas
 
 - **Paginação nas Tabelas**: Navegação eficiente em grandes conjuntos de dados
 - **Modais para Ações de Contatos**: Interfaces para importação, exportação e criação de contatos
 - **Modal para Exportação de Disparos**: Exportação de dados de envios em diferentes formatos
 - **Tema Escuro**: Suporte completo a tema escuro em todo o sistema
+- **Autenticação**: Sistema completo de login, cadastro e recuperação de senha
+- **Integração SMS**: Suporte a envio de SMS como alternativa ao WhatsApp
+- **Landing Page**: Página de marketing com planos e preços
 
 ## Melhorias Futuras
 
-- **Autenticação e Multiusuário**: Sistema de login e permissões
+- **Multiusuário**: Sistema de permissões e papéis de usuário
 - **Integrações Adicionais**: CRM, e-commerce e outras plataformas
 - **Análise Avançada**: Relatórios personalizados e exportáveis
 - **Automação Avançada**: Gatilhos baseados em comportamento
@@ -225,3 +271,6 @@ Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para d
 ## Suporte
 
 Para suporte, entre em contato através do email: suporte@suaempresa.com
+\`\`\`
+
+Agora, vamos criar uma documentação para o backend (API) para integração futura:
