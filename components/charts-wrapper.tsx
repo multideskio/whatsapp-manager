@@ -13,3 +13,5 @@ export function BarChartWrapper() {
 export function PieChartWrapper() {
   return <Charts.PieChart />
 }
+
+// Exportações nomeadas para uso com dynamic import
