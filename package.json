@@ -62,7 +62,11 @@
     "chart.js": "latest",
     "@dnd-kit/sortable": "latest",
     "@dnd-kit/utilities": "latest",
-    "react-chartjs-2": "latest"
+    "react-chartjs-2": "latest",
+    "fs": "latest",
+    "path": "latest",
+    "remark": "latest",
+    "remark-html": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
