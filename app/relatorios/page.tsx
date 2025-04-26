@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Charts } from "@/components/charts"
+import { LineChartWrapper, BarChartWrapper, PieChartWrapper } from "@/components/charts-wrapper"
 
 export const metadata: Metadata = {
   title: "Relatórios | WhatsApp Dashboard",
@@ -68,7 +68,7 @@ export default function RelatoriosPage() {
                 <CardDescription>Número de mensagens enviadas nos últimos 30 dias</CardDescription>
               </CardHeader>
               <CardContent className="pl-2 h-[300px]">
-                <Charts.LineChart />
+                <LineChartWrapper />
               </CardContent>
             </Card>
             <Card className="col-span-1">
@@ -77,7 +77,7 @@ export default function RelatoriosPage() {
                 <CardDescription>Taxa de abertura e resposta por campanha</CardDescription>
               </CardHeader>
               <CardContent className="pl-2 h-[300px]">
-                <Charts.BarChart />
+                <BarChartWrapper />
               </CardContent>
             </Card>
           </div>
@@ -90,7 +90,7 @@ export default function RelatoriosPage() {
               <CardDescription>Análise detalhada do desempenho de suas campanhas</CardDescription>
             </CardHeader>
             <CardContent className="h-[400px]">
-              <Charts.BarChart />
+              <BarChartWrapper />
             </CardContent>
           </Card>
         </TabsContent>
@@ -102,7 +102,7 @@ export default function RelatoriosPage() {
               <CardDescription>Evolução do número de contatos ao longo do tempo</CardDescription>
             </CardHeader>
             <CardContent className="h-[400px]">
-              <Charts.LineChart />
+              <LineChartWrapper />
             </CardContent>
           </Card>
         </TabsContent>
@@ -114,7 +114,7 @@ export default function RelatoriosPage() {
               <CardDescription>Estatísticas de envio e recebimento de mensagens</CardDescription>
             </CardHeader>
             <CardContent className="h-[400px]">
-              <Charts.PieChart />
+              <PieChartWrapper />
             </CardContent>
           </Card>
         </TabsContent>
