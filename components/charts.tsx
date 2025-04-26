@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef } from "react"
-import { Bar, Line } from "react-chartjs-2"
+import { Bar, Line, Pie } from "react-chartjs-2"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,6 +9,7 @@ import {
   PointElement,
   LineElement,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -17,11 +18,11 @@ import {
 import { useResizeObserver } from "@/hooks/use-resize-observer"
 import { useTheme } from "next-themes"
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend)
 
 const labels = ["01/05", "02/05", "03/05", "04/05", "05/05", "06/05", "07/05"]
 
-export function LineChart() {
+function LineChart() {
   const chartRef = useRef<HTMLDivElement | null>(null)
   const { width } = useResizeObserver(chartRef)
   const { theme } = useTheme()
@@ -99,7 +100,7 @@ export function LineChart() {
   )
 }
 
-export function BarChart() {
+function BarChart() {
   const chartRef = useRef<HTMLDivElement | null>(null)
   const { width } = useResizeObserver(chartRef)
   const { theme } = useTheme()
@@ -180,18 +181,72 @@ export function BarChart() {
   )
 }
 
-// Adicionando o componente Charts que era esperado como exportação nomeada
-export function Charts() {
+function PieChart() {
+  const chartRef = useRef<HTMLDivElement | null>(null)
+  const { width } = useResizeObserver(chartRef)
+  const { theme } = useTheme()
+  const isDark = theme === "dark"
+
+  const options: ChartOptions<"pie"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top" as const,
+        labels: {
+          boxWidth: 12,
+          font: {
+            size: width && width < 500 ? 10 : 12,
+          },
+          color: isDark ? "#e5e7eb" : undefined,
+        },
+      },
+      tooltip: {
+        bodyFont: {
+          size: 12,
+        },
+        titleFont: {
+          size: 12,
+        },
+        backgroundColor: isDark ? "rgba(15, 15, 15, 0.8)" : undefined,
+      },
+    },
+  }
+
+  const data = {
+    labels: ["Lidas", "Respondidas", "Ignoradas", "Bloqueadas"],
+    datasets: [
+      {
+        data: [65, 25, 8, 2],
+        backgroundColor: [
+          "rgba(46, 204, 113, 0.7)",
+          "rgba(52, 152, 219, 0.7)",
+          "rgba(241, 196, 15, 0.7)",
+          "rgba(231, 76, 60, 0.7)",
+        ],
+        borderColor: [
+          "rgba(46, 204, 113, 1)",
+          "rgba(52, 152, 219, 1)",
+          "rgba(241, 196, 15, 1)",
+          "rgba(231, 76, 60, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="bg-white dark:bg-card p-4 rounded-lg shadow h-[300px]">
-        <h3 className="text-lg font-medium mb-2">Envios por Dia</h3>
-        <LineChart />
-      </div>
-      <div className="bg-white dark:bg-card p-4 rounded-lg shadow h-[300px]">
-        <h3 className="text-lg font-medium mb-2">Status dos Envios</h3>
-        <BarChart />
-      </div>
+    <div ref={chartRef} className="h-full w-full">
+      <Pie options={options} data={data} />
     </div>
   )
 }
+
+// Exportando um objeto Charts com os componentes como propriedades
+export const Charts = {
+  LineChart,
+  BarChart,
+  PieChart,
+}
+
+export { LineChart, BarChart }

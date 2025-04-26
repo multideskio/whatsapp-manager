@@ -67,7 +67,7 @@ export default function RelatoriosPage() {
                 <CardTitle>Mensagens por Dia</CardTitle>
                 <CardDescription>Número de mensagens enviadas nos últimos 30 dias</CardDescription>
               </CardHeader>
-              <CardContent className="pl-2">
+              <CardContent className="pl-2 h-[300px]">
                 <Charts.LineChart />
               </CardContent>
             </Card>
@@ -76,7 +76,7 @@ export default function RelatoriosPage() {
                 <CardTitle>Desempenho por Campanha</CardTitle>
                 <CardDescription>Taxa de abertura e resposta por campanha</CardDescription>
               </CardHeader>
-              <CardContent className="pl-2">
+              <CardContent className="pl-2 h-[300px]">
                 <Charts.BarChart />
               </CardContent>
             </Card>
@@ -89,7 +89,7 @@ export default function RelatoriosPage() {
               <CardTitle>Desempenho de Campanhas</CardTitle>
               <CardDescription>Análise detalhada do desempenho de suas campanhas</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="h-[400px]">
               <Charts.BarChart />
             </CardContent>
           </Card>
@@ -101,7 +101,7 @@ export default function RelatoriosPage() {
               <CardTitle>Crescimento de Contatos</CardTitle>
               <CardDescription>Evolução do número de contatos ao longo do tempo</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="h-[400px]">
               <Charts.LineChart />
             </CardContent>
           </Card>
@@ -113,7 +113,7 @@ export default function RelatoriosPage() {
               <CardTitle>Análise de Mensagens</CardTitle>
               <CardDescription>Estatísticas de envio e recebimento de mensagens</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="h-[400px]">
               <Charts.PieChart />
             </CardContent>
           </Card>
