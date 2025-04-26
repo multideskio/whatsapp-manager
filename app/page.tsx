@@ -27,12 +27,12 @@ export default function LandingPage() {
           </Link>
         </nav>
         <div className="flex items-center gap-4">
-          <Link href="/auth/login">
+          <Link href="/auth/login" className="inline-block">
             <Button variant="ghost" size="sm">
               Entrar
             </Button>
           </Link>
-          <Link href="/auth/cadastro">
+          <Link href="/auth/cadastro" className="inline-block">
             <Button size="sm" className="bg-green-600 hover:bg-green-700">
               Começar Grátis
             </Button>
@@ -48,13 +48,13 @@ export default function LandingPage() {
             Aumente suas vendas e engajamento com campanhas personalizadas, funis de conversão e análises detalhadas.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            <Link href="/auth/cadastro">
+            <Link href="/auth/cadastro" className="inline-block">
               <Button size="lg" className="gap-2 bg-green-600 hover:bg-green-700">
                 Começar Agora
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/dashboard">
+            <Link href="/dashboard" className="inline-block">
               <Button variant="outline" size="lg">
                 Ver Demo
               </Button>
@@ -271,7 +271,7 @@ export default function LandingPage() {
                 </li>
               </ul>
               <div className="mt-6">
-                <Link href="/auth/cadastro?plan=basic">
+                <Link href="/auth/cadastro?plan=basic" className="inline-block w-full">
                   <Button className="w-full bg-green-600 hover:bg-green-700">Começar Agora</Button>
                 </Link>
               </div>
@@ -317,7 +317,7 @@ export default function LandingPage() {
                 </li>
               </ul>
               <div className="mt-6">
-                <Link href="/auth/cadastro?plan=pro">
+                <Link href="/auth/cadastro?plan=pro" className="inline-block w-full">
                   <Button className="w-full bg-green-600 hover:bg-green-700">Escolher Plano</Button>
                 </Link>
               </div>
@@ -360,7 +360,7 @@ export default function LandingPage() {
                 </li>
               </ul>
               <div className="mt-6">
-                <Link href="/auth/cadastro?plan=enterprise">
+                <Link href="/auth/cadastro?plan=enterprise" className="inline-block w-full">
                   <Button className="w-full bg-green-600 hover:bg-green-700">Contatar Vendas</Button>
                 </Link>
               </div>
@@ -535,12 +535,12 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="flex flex-col gap-2 min-[400px]:flex-row">
-            <Link href="/auth/cadastro">
+            <Link href="/auth/cadastro" className="inline-block">
               <Button size="lg" className="bg-green-600 hover:bg-green-700">
                 Criar Conta Grátis
               </Button>
             </Link>
-            <Link href="#pricing">
+            <Link href="#pricing" className="inline-block">
               <Button variant="outline" size="lg">
                 Ver Planos
               </Button>

@@ -25,7 +25,9 @@ export function Header() {
   const handleLogout = () => {
     // Em um ambiente real, você faria uma chamada à API para invalidar o token
     document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-    router.push("/auth/login")
+
+    // Use window.location para garantir um redirecionamento completo
+    window.location.href = "/auth/login"
   }
 
   return (

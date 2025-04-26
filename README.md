@@ -1,33 +1,34 @@
 # WhatsApp Campaign Manager
 
-![WhatsApp Campaign Manager](https://placeholder.pics/svg/1200x630/EAEAEA/CCCCCC/WhatsApp%20Campaign%20Manager)
+![WhatsApp Campaign Manager](/dashboard-preview.png)
 
 ## Visão Geral
 
-O WhatsApp Campaign Manager é uma plataforma completa para gerenciamento de campanhas de disparo em massa via WhatsApp Business API. Desenvolvido com Next.js e Tailwind CSS, o sistema oferece uma interface moderna e responsiva para gerenciar contatos, criar campanhas, configurar funis de mensagens automatizadas e monitorar o desempenho dos envios.
+O WhatsApp Campaign Manager é uma plataforma completa para gerenciamento de campanhas de disparo em massa via WhatsApp Business API. Desenvolvido com Next.js 15 e Tailwind CSS, o sistema oferece uma interface moderna e responsiva para gerenciar contatos, criar campanhas, configurar funis de mensagens automatizadas e monitorar o desempenho dos envios.
 
 ## Funcionalidades Principais
 
 - **Dashboard Analítico**: Visualização de métricas e KPIs importantes
-- **Gerenciamento de Contatos**: Importação, categorização e segmentação de contatos
+- **Gerenciamento de Contatos**: Importação, categorização, edição e segmentação de contatos
 - **Campanhas**: Criação e agendamento de campanhas de mensagens
-- **Funis de Mensagens**: Automação de sequências de mensagens com intervalos configuráveis
+- **Funis de Mensagens**: Automação de sequências de mensagens com visualização Kanban
 - **Templates**: Criação e gerenciamento de templates aprovados pelo WhatsApp
 - **Monitoramento de Disparos**: Acompanhamento em tempo real do status de cada mensagem
+- **Relatórios**: Gráficos e análises detalhadas de desempenho
 - **Configurações**: Integração com Meta Business API e configuração de webhooks
 - **Tema Escuro**: Suporte completo a tema escuro em toda a aplicação
 - **Integração SMS**: Envio de SMS como alternativa ou fallback para mensagens WhatsApp
-- **Landing Page**: Página de marketing com planos e preços
+- **Landing Page**: Página de marketing com planos, preços e depoimentos
 - **Autenticação**: Sistema de login, cadastro e recuperação de senha
 
 ## Tecnologias Utilizadas
 
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
+- **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS
 - **UI Components**: shadcn/ui
 - **Gráficos**: Chart.js, React-Chartjs-2
-- **Estilização**: Tailwind CSS
-- **Formulários**: React Hook Form (implícito nos componentes)
-- **Integração**: WhatsApp Business API, Meta API, SMS APIs (Twilio, Zenvia, etc.)
+- **Drag and Drop**: @dnd-kit/core para funcionalidade Kanban
+- **Formulários**: React Hook Form
+- **Integração**: WhatsApp Business API, Meta API, SMS APIs
 
 ## Estrutura do Projeto
 
@@ -35,40 +36,43 @@ O WhatsApp Campaign Manager é uma plataforma completa para gerenciamento de cam
 whatsapp-dashboard/
 ├── app/                    # Rotas e páginas (App Router)
 │   ├── layout.tsx          # Layout principal
-│   ├── marketing/          # Páginas de marketing (landing page)
-│   │   ├── page.tsx        # Landing page principal
-│   │   └── layout.tsx      # Layout para páginas de marketing
+│   ├── page.tsx            # Landing page principal
+│   ├── layout-dashboard.tsx # Layout compartilhado para área administrativa
 │   ├── dashboard/          # Área administrativa
 │   │   ├── page.tsx        # Dashboard principal
-│   │   ├── layout.tsx      # Layout para dashboard
-│   │   ├── campanhas/      # Gerenciamento de campanhas
-│   │   ├── categorias/     # Gerenciamento de categorias
-│   │   ├── configuracoes/  # Configurações do sistema
-│   │   ├── contatos/       # Gerenciamento de contatos
-│   │   ├── disparos/       # Monitoramento de disparos
-│   │   ├── funis/          # Gerenciamento de funis
-│   │   └── templates/      # Gerenciamento de templates
+│   │   └── layout.tsx      # Layout para dashboard
+│   ├── contatos/           # Gerenciamento de contatos
+│   ├── categorias/         # Gerenciamento de categorias
+│   ├── campanhas/          # Gerenciamento de campanhas
+│   ├── funis/              # Gerenciamento de funis
+│   │   ├── page.tsx        # Lista de funis
+│   │   └── [id]/           # Detalhes do funil com visualização Kanban
+│   ├── templates/          # Gerenciamento de templates
+│   ├── disparos/           # Monitoramento de disparos
+│   ├── relatorios/         # Relatórios e análises
+│   ├── configuracoes/      # Configurações do sistema
 │   └── auth/               # Páginas de autenticação
 │       ├── login/          # Login
 │       ├── cadastro/       # Cadastro
-│       ├── recuperar/      # Recuperação de senha
-│       └── layout.tsx      # Layout para autenticação
+│       └── recuperar/      # Recuperação de senha
 ├── components/             # Componentes reutilizáveis
 │   ├── charts.tsx          # Componentes de gráficos
+│   ├── charts-wrapper.tsx  # Wrappers de cliente para os gráficos
 │   ├── dashboard-cards.tsx # Cards do dashboard
 │   ├── header.tsx          # Cabeçalho da aplicação
+│   ├── sidebar.tsx         # Barra lateral de navegação
+│   ├── footer.tsx          # Rodapé da aplicação
+│   ├── edit-contact-modal.tsx # Modal de edição de contatos
 │   ├── new-campaign-modal.tsx # Modal de nova campanha
 │   ├── new-category-modal.tsx # Modal de nova categoria
 │   ├── new-funnel-modal.tsx   # Modal de novo funil
 │   ├── new-template-modal.tsx # Modal de novo template
-│   ├── recent-sends-table.tsx # Tabela de envios recentes
-│   ├── send-details-modal.tsx # Modal de detalhes do envio
-│   ├── sidebar.tsx         # Barra lateral de navegação
-│   ├── table-pagination.tsx # Componente de paginação para tabelas
-│   ├── theme-toggle.tsx    # Alternador de tema claro/escuro
+│   ├── new-contact-modal.tsx  # Modal de novo contato
 │   ├── import-contacts-modal.tsx # Modal de importação de contatos
 │   ├── export-modal.tsx    # Modal de exportação de dados
-│   ├── new-contact-modal.tsx # Modal de novo contato
+│   ├── send-details-modal.tsx # Modal de detalhes do envio
+│   ├── table-pagination.tsx # Componente de paginação para tabelas
+│   ├── theme-toggle.tsx    # Alternador de tema claro/escuro
 │   └── ui/                 # Componentes de UI (shadcn)
 ├── hooks/                  # Hooks personalizados
 │   └── use-resize-observer.ts # Hook para observar redimensionamento
@@ -76,10 +80,11 @@ whatsapp-dashboard/
 │   └── utils.ts            # Funções utilitárias
 ├── middleware.ts           # Middleware para autenticação e redirecionamentos
 ├── public/                 # Arquivos estáticos
+│   └── dashboard-preview.png # Imagem de preview do dashboard
 └── tailwind.config.ts      # Configuração do Tailwind CSS
 \`\`\`
 
-## Páginas e Funcionalidades
+## Funcionalidades Detalhadas
 
 ### Dashboard
 
@@ -95,101 +100,44 @@ Gerenciamento completo de contatos:
 - Listagem com filtros, busca e paginação
 - Importação e exportação de contatos
 - Categorização de contatos
+- Edição de contatos através de modal dedicado
 - Visualização de status (ativo/inativo)
 - Modal para adicionar novos contatos
-
-### Categorias
-
-Organização de contatos em categorias:
-- Criação e edição de categorias
-- Visualização de contatos por categoria
-- Descrição e metadados de categorias
-
-### Campanhas
-
-Criação e gerenciamento de campanhas de disparo:
-- Assistente de criação em 5 etapas
-- Seleção de contatos e templates
-- Agendamento de envios
-- Monitoramento de status
 
 ### Funis
 
 Automação de sequências de mensagens:
 - Criação de funis com múltiplas etapas
+- Visualização Kanban com drag-and-drop para gerenciar etapas
 - Configuração de intervalos entre mensagens
 - Seleção de templates para cada etapa
 - Ativação/desativação de funis
+- Página detalhada para cada funil
 
-### Templates
+### Relatórios
 
-Gerenciamento de templates aprovados pelo WhatsApp:
-- Criação e edição de templates
-- Suporte a variáveis dinâmicas
-- Visualização de status de aprovação
-- Categorização de templates
+Análise detalhada de desempenho:
+- Gráficos interativos para visualização de dados
+- Métricas de conversão e engajamento
+- Análise de desempenho por campanha
+- Exportação de relatórios
 
-### Disparos
+## Navegação e Autenticação
 
-Monitoramento detalhado de cada mensagem enviada:
-- Filtros por campanha, status, período e contato
-- Visualização de status em tempo real
-- Detalhes completos de cada envio
-- Timeline do ciclo de vida da mensagem
-- Reenvio de mensagens com erro
-- Paginação para navegar entre os registros
-- Exportação de dados de disparos
+O sistema implementa um fluxo completo de navegação e autenticação:
 
-### Configurações
-
-Configurações técnicas da plataforma:
-- Credenciais da API Meta
-- Configuração de webhooks
-- Gerenciamento de números WABA
-- Integração com provedores de SMS
-- Configurações de eventos e notificações
-
-### Integração SMS
-
-Configuração para envio de SMS como alternativa ao WhatsApp:
-- Suporte a múltiplos provedores (Twilio, Zenvia, Infobip, etc.)
-- Configuração de URL da API e chaves de autenticação
-- Opção de fallback automático para SMS quando WhatsApp falha
-- Personalização de ID de remetente
-
-## Status dos Envios
-
-O sistema rastreia os seguintes status para cada mensagem:
-
-- **Pendente**: Mensagem agendada, aguardando envio
-- **Enviado**: Mensagem enviada para a API do WhatsApp
-- **Entregue**: Mensagem entregue ao dispositivo do destinatário
-- **Lido**: Mensagem visualizada pelo destinatário
-- **Erro**: Falha no envio da mensagem
-
-## Tema Escuro
-
-O sistema oferece suporte completo a tema escuro:
-- Alternador de tema no cabeçalho
-- Cores otimizadas para leitura em ambientes escuros
-- Transição suave entre temas claro e escuro
-- Persistência da preferência do usuário
-
-## Autenticação
-
-O sistema inclui um fluxo completo de autenticação:
-- Login com email e senha
-- Cadastro de novos usuários
-- Recuperação de senha
-- Proteção de rotas via middleware
-- Redirecionamentos inteligentes baseados no estado de autenticação
+- **Landing Page**: Apresenta o produto com informações sobre recursos, preços e depoimentos
+- **Autenticação**: Sistema de login, cadastro e recuperação de senha
+- **Middleware**: Protege rotas privadas e redireciona usuários não autenticados
+- **Navegação**: Sidebar intuitiva para acesso a todas as funcionalidades
+- **Logout**: Processo seguro de saída que limpa cookies e redireciona para a página de login
 
 ## Instalação e Configuração
 
 ### Requisitos
 
-- Node.js 18.0 ou superior
-- NPM ou Yarn
+- Node.js 18.18.0 ou superior
+- NPM, Yarn ou pnpm
 - Conta no WhatsApp Business API
 
 ### Passos para Instalação
@@ -205,6 +153,8 @@ O sistema inclui um fluxo completo de autenticação:
    npm install
    # ou
    yarn install
+   # ou
+   pnpm install
    \`\`\`
 
 3. Configure as variáveis de ambiente:
@@ -223,9 +173,49 @@ O sistema inclui um fluxo completo de autenticação:
    npm run dev
    # ou
    yarn dev
+   # ou
+   pnpm dev
    \`\`\`
 
 5. Acesse a aplicação em `http://localhost:3000`
+
+### Construção para Produção
+
+1. Construa a aplicação:
+   \`\`\`bash
+   npm run build
+   # ou
+   yarn build
+   # ou
+   pnpm build
+   \`\`\`
+
+2. Inicie o servidor de produção:
+   \`\`\`bash
+   npm start
+   # ou
+   yarn start
+   # ou
+   pnpm start
+   \`\`\`
+
+## Resolução de Problemas Comuns
+
+### Erro de Renderização de Componentes
+
+Se encontrar erros relacionados a componentes indefinidos durante a construção:
+
+1. Verifique se todos os componentes estão sendo exportados corretamente
+2. Para componentes que usam hooks do React, certifique-se de que estão marcados com `'use client'`
+3. Para páginas que usam componentes do cliente, use wrappers específicos (como `charts-wrapper.tsx`)
+
+### Problemas de Navegação
+
+Se os links não estiverem funcionando corretamente:
+
+1. Verifique o middleware.ts para garantir que as rotas estão configuradas corretamente
+2. Certifique-se de que os componentes Link estão implementados corretamente
+3. Para operações de logout, use `window.location.href` em vez de `router.push()`
 
 ## Integração com WhatsApp Business API
 
@@ -236,24 +226,15 @@ Para utilizar o sistema, é necessário:
 3. Configurar os webhooks para receber notificações
 4. Obter aprovação para os templates de mensagens
 
-## Integração com Provedores de SMS
-
-O sistema suporta integração com diversos provedores de SMS:
-
-1. Configure o provedor nas configurações do sistema
-2. Adicione a URL da API e a chave de API
-3. Configure o ID do remetente conforme as regras do provedor
-4. Opcionalmente, ative o fallback automático para SMS
-
 ## Melhorias Implementadas
 
-- **Paginação nas Tabelas**: Navegação eficiente em grandes conjuntos de dados
-- **Modais para Ações de Contatos**: Interfaces para importação, exportação e criação de contatos
-- **Modal para Exportação de Disparos**: Exportação de dados de envios em diferentes formatos
+- **Visualização Kanban para Funis**: Interface drag-and-drop para gerenciar etapas de funis
+- **Edição de Contatos**: Modal dedicado para edição de informações de contatos
+- **Relatórios Avançados**: Gráficos interativos para análise de desempenho
+- **Landing Page Completa**: Informações detalhadas sobre o produto, preços e depoimentos
+- **Navegação Aprimorada**: Fluxo intuitivo entre páginas públicas e área administrativa
 - **Tema Escuro**: Suporte completo a tema escuro em todo o sistema
-- **Autenticação**: Sistema completo de login, cadastro e recuperação de senha
-- **Integração SMS**: Suporte a envio de SMS como alternativa ao WhatsApp
-- **Landing Page**: Página de marketing com planos e preços
+- **Autenticação Robusta**: Sistema completo de login, cadastro e recuperação de senha
 
 ## Melhorias Futuras
 
@@ -263,6 +244,8 @@ O sistema suporta integração com diversos provedores de SMS:
 - **Automação Avançada**: Gatilhos baseados em comportamento
 - **Chatbot**: Respostas automatizadas com IA
 - **Multilingue**: Suporte a múltiplos idiomas
+- **Notificações**: Sistema de alertas e notificações em tempo real
+- **Temas Personalizáveis**: Opções adicionais de personalização visual
 
 ## Licença
 
@@ -271,6 +254,3 @@ Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para d
 ## Suporte
 
 Para suporte, entre em contato através do email: suporte@suaempresa.com
-\`\`\`
-
-Agora, vamos criar uma documentação para o backend (API) para integração futura:
