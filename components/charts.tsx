@@ -249,4 +249,4 @@ export const Charts = {
   PieChart,
 }
 
-export { LineChart, BarChart }
+export { LineChart, BarChart, PieChart }
