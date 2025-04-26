@@ -11,6 +11,17 @@ import { TablePagination } from "@/components/table-pagination"
 import { ImportContactsModal } from "@/components/import-contacts-modal"
 import { ExportModal } from "@/components/export-modal"
 import { NewContactModal } from "@/components/new-contact-modal"
+import { EditContactModal } from "@/components/edit-contact-modal"
+
+interface Contact {
+  id: string
+  name: string
+  phone: string
+  email?: string
+  category?: string
+  status: string
+  notes?: string
+}
 
 const contacts = [
   {
@@ -123,6 +134,8 @@ const contacts = [
 export default function ContactsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [editingContact, setEditingContact] = useState<Contact | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   // Calculate pagination
   const indexOfLastContact = currentPage * pageSize
@@ -136,6 +149,17 @@ export default function ContactsPage() {
   const handlePageSizeChange = (size: number) => {
     setPageSize(size)
     setCurrentPage(1) // Reset to first page when changing page size
+  }
+
+  const handleEditContact = (contact: Contact) => {
+    setEditingContact(contact)
+    setIsEditModalOpen(true)
+  }
+
+  const handleSaveContact = (updatedContact: Contact) => {
+    // Aqui seria implementada a lógica para salvar o contato atualizado
+    console.log("Contato atualizado:", updatedContact)
+    setIsEditModalOpen(false)
   }
 
   return (
@@ -217,7 +241,7 @@ export default function ContactsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" onClick={() => handleEditContact(contact)}>
                     Editar
                   </Button>
                 </TableCell>
@@ -234,6 +258,13 @@ export default function ContactsPage() {
           onPageSizeChange={handlePageSizeChange}
         />
       </div>
+
+      <EditContactModal
+        contact={editingContact}
+        open={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        onSave={handleSaveContact}
+      />
     </div>
   )
 }

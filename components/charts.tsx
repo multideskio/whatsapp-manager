@@ -179,3 +179,19 @@ export function BarChart() {
     </div>
   )
 }
+
+// Adicionando o componente Charts que era esperado como exportação nomeada
+export function Charts() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-white dark:bg-card p-4 rounded-lg shadow h-[300px]">
+        <h3 className="text-lg font-medium mb-2">Envios por Dia</h3>
+        <LineChart />
+      </div>
+      <div className="bg-white dark:bg-card p-4 rounded-lg shadow h-[300px]">
+        <h3 className="text-lg font-medium mb-2">Status dos Envios</h3>
+        <BarChart />
+      </div>
+    </div>
+  )
+}

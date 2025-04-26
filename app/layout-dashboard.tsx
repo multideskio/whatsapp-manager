@@ -2,8 +2,8 @@ import type React from "react"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
 
-// Mudando para exportação nomeada em vez de default
-export function DashboardLayout({
+// Mudando para exportação padrão (default export)
+export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode

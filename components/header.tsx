@@ -12,6 +12,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
+import Link from "next/link"
 
 export function Header() {
   const router = useRouter()
@@ -54,6 +55,12 @@ export function Header() {
         <h1 className="text-lg font-semibold">Empresa XYZ</h1>
       </div>
       <div className="flex items-center gap-2">
+        <Link
+          href="/api-docs.html"
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          API Docs
+        </Link>
         <ThemeToggle />
         <Button variant="ghost" size="icon">
           <Bell className="h-5 w-5" />

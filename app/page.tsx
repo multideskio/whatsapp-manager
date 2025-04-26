@@ -1,338 +1,187 @@
-import type React from "react"
 import Link from "next/link"
-import { Check, MessageSquare, Send, BarChart3, Users, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowRight, MessageSquare, BarChart3, Users, Layers } from "lucide-react"
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <MessageSquare className="h-6 w-6 text-blue-600" />
-            <span className="text-xl font-bold">WhatsApp Manager</span>
-          </div>
-          <nav className="hidden gap-6 md:flex">
-            <Link href="#features" className="text-muted-foreground hover:text-foreground">
-              Recursos
-            </Link>
-            <Link href="#pricing" className="text-muted-foreground hover:text-foreground">
-              Planos
-            </Link>
-            <Link href="#testimonials" className="text-muted-foreground hover:text-foreground">
-              Depoimentos
-            </Link>
-            <Link href="#faq" className="text-muted-foreground hover:text-foreground">
-              FAQ
-            </Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/auth/login">
-              <Button variant="ghost">Entrar</Button>
-            </Link>
-            <Link href="/auth/cadastro">
-              <Button>Começar grátis</Button>
-            </Link>
-          </div>
+      <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b">
+        <div className="flex items-center gap-2">
+          <MessageSquare className="h-6 w-6 text-blue-600" />
+          <span className="text-lg font-bold">WhatsApp Dashboard</span>
+        </div>
+        <nav className="hidden md:flex gap-6">
+          <Link href="#features" className="text-sm font-medium hover:underline underline-offset-4">
+            Recursos
+          </Link>
+          <Link href="#pricing" className="text-sm font-medium hover:underline underline-offset-4">
+            Preços
+          </Link>
+          <Link href="#testimonials" className="text-sm font-medium hover:underline underline-offset-4">
+            Depoimentos
+          </Link>
+          <Link href="#faq" className="text-sm font-medium hover:underline underline-offset-4">
+            FAQ
+          </Link>
+        </nav>
+        <div className="flex items-center gap-4">
+          <Link href="/auth/login">
+            <Button variant="ghost" size="sm">
+              Entrar
+            </Button>
+          </Link>
+          <Link href="/auth/cadastro">
+            <Button size="sm">Começar Grátis</Button>
+          </Link>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="container flex flex-col items-center justify-center gap-6 py-24 text-center md:py-32">
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-            Potencialize seu marketing no WhatsApp
-          </h1>
-          <p className="mx-auto max-w-[700px] text-lg text-muted-foreground md:text-xl">
-            Gerencie campanhas, automatize mensagens e aumente suas conversões com a plataforma mais completa para
-            WhatsApp Business.
+      {/* Hero Section */}
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-blue-50 dark:from-gray-950 dark:to-gray-900">
+        <div className="container px-4 md:px-6 mx-auto flex flex-col items-center text-center gap-4">
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tighter">Automatize seu Marketing no WhatsApp</h1>
+          <p className="max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+            Aumente suas vendas e engajamento com campanhas personalizadas, funis de conversão e análises detalhadas.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <Link href="/auth/cadastro">
-            <Button size="lg" className="h-12">
-              Teste grátis por 14 dias
-            </Button>
-          </Link>
-          <Link href="#demo">
-            <Button size="lg" variant="outline" className="h-12">
-              Ver demonstração
-            </Button>
-          </Link>
-        </div>
-        <div className="mt-8 rounded-lg border bg-card/50 p-4 backdrop-blur">
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">+5.000 empresas</span> já utilizam nossa plataforma
-          </p>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section id="features" className="container py-16 md:py-24">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Recursos completos para seu negócio</h2>
-          <p className="mx-auto max-w-[700px] text-muted-foreground">
-            Tudo o que você precisa para gerenciar suas campanhas de WhatsApp em um só lugar
-          </p>
-        </div>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <FeatureCard
-            icon={<Send className="h-10 w-10 text-blue-600" />}
-            title="Campanhas automatizadas"
-            description="Crie e agende campanhas de mensagens para seus contatos com segmentação avançada."
-          />
-          <FeatureCard
-            icon={<Users className="h-10 w-10 text-blue-600" />}
-            title="Gestão de contatos"
-            description="Organize seus contatos em categorias e segmente para campanhas específicas."
-          />
-          <FeatureCard
-            icon={<BarChart3 className="h-10 w-10 text-blue-600" />}
-            title="Análises detalhadas"
-            description="Acompanhe o desempenho das suas campanhas com relatórios e métricas em tempo real."
-          />
-          <FeatureCard
-            icon={<MessageSquare className="h-10 w-10 text-blue-600" />}
-            title="Templates personalizados"
-            description="Crie templates de mensagens aprovados pelo WhatsApp com variáveis dinâmicas."
-          />
-          <FeatureCard
-            icon={<Shield className="h-10 w-10 text-blue-600" />}
-            title="Conformidade com WhatsApp"
-            description="Plataforma 100% em conformidade com as políticas do WhatsApp Business API."
-          />
-          <FeatureCard
-            icon={<BarChart3 className="h-10 w-10 text-blue-600" />}
-            title="Funis de conversão"
-            description="Configure sequências de mensagens automatizadas baseadas em comportamento."
-          />
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="bg-card/50 py-16 md:py-24">
-        <div className="container">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">Planos para todos os tamanhos de negócio</h2>
-            <p className="mx-auto max-w-[700px] text-muted-foreground">
-              Escolha o plano ideal para suas necessidades e escale conforme seu negócio cresce
-            </p>
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <Link href="/auth/cadastro">
+              <Button size="lg" className="gap-2">
+                Começar Agora
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/dashboard">
+              <Button variant="outline" size="lg">
+                Ver Demo
+              </Button>
+            </Link>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            <PricingCard
-              title="Básico"
-              price="R$ 97"
-              description="Ideal para pequenas empresas e iniciantes"
-              features={[
-                "1 número de WhatsApp",
-                "Até 1.000 contatos",
-                "Até 5.000 mensagens/mês",
-                "5 templates personalizados",
-                "Campanhas básicas",
-                "Suporte por email",
-              ]}
-              buttonText="Começar grátis"
-              buttonVariant="outline"
-            />
-            <PricingCard
-              title="Profissional"
-              price="R$ 297"
-              description="Para empresas em crescimento"
-              features={[
-                "3 números de WhatsApp",
-                "Até 10.000 contatos",
-                "Até 50.000 mensagens/mês",
-                "20 templates personalizados",
-                "Funis de conversão",
-                "Relatórios avançados",
-                "Suporte prioritário",
-              ]}
-              buttonText="Começar grátis"
-              buttonVariant="default"
-              popular
-            />
-            <PricingCard
-              title="Enterprise"
-              price="R$ 997"
-              description="Para grandes empresas e agências"
-              features={[
-                "10 números de WhatsApp",
-                "Contatos ilimitados",
-                "Até 500.000 mensagens/mês",
-                "Templates ilimitados",
-                "API completa",
-                "Integrações personalizadas",
-                "Gerente de conta dedicado",
-                "SLA garantido",
-              ]}
-              buttonText="Falar com vendas"
-              buttonVariant="outline"
-            />
+          <div className="w-full max-w-3xl mt-8 aspect-video rounded-xl overflow-hidden border shadow-lg">
+            <img src="/whatsapp-marketing-dashboard.png" alt="Dashboard Preview" className="w-full h-full object-cover" />
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="container py-16 md:py-24">
-        <div className="rounded-lg bg-blue-600 p-8 md:p-12">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+      {/* Features Section */}
+      <section id="features" className="w-full py-12 md:py-24 lg:py-32">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center">
+            <div className="space-y-2">
+              <div className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-sm dark:bg-blue-800">Recursos</div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Tudo que você precisa para crescer
+              </h2>
+              <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+                Nossa plataforma oferece todas as ferramentas necessárias para automatizar e otimizar suas comunicações
+                via WhatsApp.
+              </p>
+            </div>
+          </div>
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
+            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+              <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-800">
+                <MessageSquare className="h-6 w-6 text-blue-600 dark:text-blue-50" />
+              </div>
+              <h3 className="text-xl font-bold">Campanhas Automatizadas</h3>
+              <p className="text-sm text-gray-500 text-center dark:text-gray-400">
+                Crie e agende campanhas personalizadas para diferentes segmentos de clientes.
+              </p>
+            </div>
+            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+              <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-800">
+                <Layers className="h-6 w-6 text-blue-600 dark:text-blue-50" />
+              </div>
+              <h3 className="text-xl font-bold">Funis de Conversão</h3>
+              <p className="text-sm text-gray-500 text-center dark:text-gray-400">
+                Construa funis de vendas eficientes com múltiplas etapas e mensagens sequenciais.
+              </p>
+            </div>
+            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+              <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-800">
+                <Users className="h-6 w-6 text-blue-600 dark:text-blue-50" />
+              </div>
+              <h3 className="text-xl font-bold">Gestão de Contatos</h3>
+              <p className="text-sm text-gray-500 text-center dark:text-gray-400">
+                Organize seus contatos em categorias e segmente para comunicações mais eficazes.
+              </p>
+            </div>
+            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+              <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-800">
+                <BarChart3 className="h-6 w-6 text-blue-600 dark:text-blue-50" />
+              </div>
+              <h3 className="text-xl font-bold">Análises Detalhadas</h3>
+              <p className="text-sm text-gray-500 text-center dark:text-gray-400">
+                Acompanhe o desempenho de suas campanhas com relatórios e métricas avançadas.
+              </p>
+            </div>
+            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 md:col-span-2 lg:col-span-1">
+              <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-800">
+                <svg
+                  className="h-6 w-6 text-blue-600 dark:text-blue-50"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold">Templates Personalizáveis</h3>
+              <p className="text-sm text-gray-500 text-center dark:text-gray-400">
+                Crie templates de mensagens personalizados para diferentes ocasiões e objetivos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-blue-50 dark:bg-blue-950">
+        <div className="container px-4 md:px-6 mx-auto flex flex-col items-center space-y-4 text-center">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
               Pronto para transformar seu marketing no WhatsApp?
             </h2>
-            <p className="mb-8 text-lg text-blue-100">
-              Comece seu teste gratuito de 14 dias hoje mesmo e veja os resultados.
+            <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
+              Comece hoje mesmo e veja os resultados em sua comunicação e vendas.
             </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Link href="/auth/cadastro">
-                <Button size="lg" variant="secondary" className="h-12">
-                  Começar agora
-                </Button>
-              </Link>
-              <Link href="#demo">
-                <Button size="lg" variant="outline" className="h-12 border-blue-400 text-white hover:bg-blue-700">
-                  Agendar demonstração
-                </Button>
-              </Link>
-            </div>
+          </div>
+          <div className="flex flex-col gap-2 min-[400px]:flex-row">
+            <Link href="/auth/cadastro">
+              <Button size="lg">Criar Conta Grátis</Button>
+            </Link>
+            <Link href="#pricing">
+              <Button variant="outline" size="lg">
+                Ver Planos
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-background">
-        <div className="container py-12">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-6 w-6 text-blue-600" />
-                <span className="text-xl font-bold">WhatsApp Manager</span>
-              </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                A plataforma completa para gerenciamento de campanhas no WhatsApp Business.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-4 text-sm font-semibold">Produto</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="#features" className="text-muted-foreground hover:text-foreground">
-                    Recursos
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#pricing" className="text-muted-foreground hover:text-foreground">
-                    Planos
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-4 text-sm font-semibold">Empresa</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/sobre" className="text-muted-foreground hover:text-foreground">
-                    Sobre nós
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contato" className="text-muted-foreground hover:text-foreground">
-                    Contato
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-4 text-sm font-semibold">Legal</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/termos" className="text-muted-foreground hover:text-foreground">
-                    Termos de Serviço
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/privacidade" className="text-muted-foreground hover:text-foreground">
-                    Política de Privacidade
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-12 border-t pt-6">
-            <p className="text-center text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} WhatsApp Manager. Todos os direitos reservados.
-            </p>
-          </div>
+      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full border-t px-4 md:px-6">
+        <div className="flex items-center gap-2">
+          <MessageSquare className="h-5 w-5 text-blue-600" />
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            © 2023 WhatsApp Dashboard. Todos os direitos reservados.
+          </p>
         </div>
+        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+          <Link href="#" className="text-sm hover:underline underline-offset-4">
+            Termos de Serviço
+          </Link>
+          <Link href="#" className="text-sm hover:underline underline-offset-4">
+            Privacidade
+          </Link>
+        </nav>
       </footer>
     </div>
-  )
-}
-
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <Card className="border-border bg-card">
-      <CardHeader>
-        <div className="mb-4">{icon}</div>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{description}</p>
-      </CardContent>
-    </Card>
-  )
-}
-
-function PricingCard({
-  title,
-  price,
-  description,
-  features,
-  buttonText,
-  buttonVariant = "default",
-  popular = false,
-}: {
-  title: string
-  price: string
-  description: string
-  features: string[]
-  buttonText: string
-  buttonVariant?: "default" | "outline"
-  popular?: boolean
-}) {
-  return (
-    <Card className={`border-border ${popular ? "relative border-blue-600 shadow-lg" : "bg-card"}`}>
-      {popular && (
-        <div className="absolute -top-4 left-0 right-0 flex justify-center">
-          <span className="rounded-full bg-blue-600 px-4 py-1 text-xs font-medium text-white">Mais popular</span>
-        </div>
-      )}
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-        <div className="mt-4">
-          <span className="text-4xl font-bold">{price}</span>
-          <span className="text-muted-foreground">/mês</span>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <ul className="space-y-3">
-          {features.map((feature, index) => (
-            <li key={index} className="flex items-center">
-              <Check className="mr-2 h-4 w-4 text-green-500" />
-              <span className="text-sm">{feature}</span>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-      <CardFooter>
-        <Link href="/auth/cadastro" className="w-full">
-          <Button variant={buttonVariant} className="w-full">
-            {buttonText}
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
   )
 }

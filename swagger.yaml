@@ -1,0 +1,3018 @@
+openapi: 3.0.0
+info:
+  title: WhatsApp Manager API
+  description: API para gerenciamento de campanhas, contatos e mensagens via WhatsApp Business API
+  version: 1.0.0
+  contact:
+    name: Suporte WhatsApp Manager
+    email: suporte@whatsapp-manager.com
+  license:
+    name: Proprietário
+    url: https://whatsapp-manager.com/termos
+
+servers:
+  - url: https://api.whatsapp-manager.com/v1
+    description: Servidor de Produção
+  - url: https://api-staging.whatsapp-manager.com/v1
+    description: Servidor de Homologação
+  - url: http://localhost:3001/v1
+    description: Servidor Local
+
+tags:
+  - name: Autenticação
+    description: Endpoints para autenticação e gerenciamento de usuários
+  - name: Contatos
+    description: Gerenciamento de contatos
+  - name: Categorias
+    description: Gerenciamento de categorias de contatos
+  - name: Campanhas
+    description: Gerenciamento de campanhas de disparo
+  - name: Funis
+    description: Gerenciamento de funis de mensagens automatizadas
+  - name: Templates
+    description: Gerenciamento de templates de mensagens
+  - name: Disparos
+    description: Gerenciamento e monitoramento de disparos de mensagens
+  - name: Configurações
+    description: Configurações da plataforma e integrações
+  - name: Relatórios
+    description: Geração de relatórios e métricas
+  - name: Webhooks
+    description: Configuração e gerenciamento de webhooks
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: "Requisição inválida"
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: "email"
+                  message:
+                    type: string
+                    example: "Email inválido"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "usuario@exemplo.com"
+        password:
+          type: string
+          format: password
+          example: "senha123"
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        expires_at:
+          type: string
+          format: date-time
+          example: "2023-12-31T23:59:59Z"
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "usr_123456"
+        name:
+          type: string
+          example: "João Silva"
+        email:
+          type: string
+          format: email
+          example: "joao@exemplo.com"
+        company:
+          type: string
+          example: "Empresa XYZ"
+        role:
+          type: string
+          enum: [admin, user, viewer]
+          example: "admin"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T10:00:00Z"
+
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "cnt_123456"
+        name:
+          type: string
+          example: "João Silva"
+        phone:
+          type: string
+          example: "+5511987654321"
+        email:
+          type: string
+          format: email
+          example: "joao@exemplo.com"
+        category_id:
+          type: string
+          example: "cat_123456"
+        category_name:
+          type: string
+          example: "Cliente"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          example: "ativo"
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["vip", "ecommerce"]
+        custom_fields:
+          type: object
+          additionalProperties: true
+          example:
+            birthday: "1990-05-15"
+            last_purchase: "2023-04-10"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-05-20T14:45:00Z"
+
+    ContactsList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    ContactCreate:
+      type: object
+      required:
+        - name
+        - phone
+      properties:
+        name:
+          type: string
+          example: "Maria Oliveira"
+        phone:
+          type: string
+          example: "+5511987654322"
+        email:
+          type: string
+          format: email
+          example: "maria@exemplo.com"
+        category_id:
+          type: string
+          example: "cat_123456"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          default: "ativo"
+          example: "ativo"
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["novo", "site"]
+        custom_fields:
+          type: object
+          additionalProperties: true
+          example:
+            birthday: "1985-10-20"
+
+    ContactUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Maria Silva Oliveira"
+        phone:
+          type: string
+          example: "+5511987654322"
+        email:
+          type: string
+          format: email
+          example: "maria.nova@exemplo.com"
+        category_id:
+          type: string
+          example: "cat_123456"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          example: "inativo"
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["novo", "site"]
+        custom_fields:
+          type: object
+          additionalProperties: true
+          example:
+            birthday: "1985-10-20"
+
+    ImportJob:
+      type: object
+      properties:
+        job_id:
+          type: string
+          example: "job_123456"
+        status:
+          type: string
+          enum: [processing, completed, failed]
+          example: "processing"
+        message:
+          type: string
+          example: "Importação iniciada. Você será notificado quando concluída."
+        total_records:
+          type: integer
+          example: 150
+        imported:
+          type: integer
+          example: 145
+        errors:
+          type: integer
+          example: 5
+        error_details:
+          type: array
+          items:
+            type: object
+            properties:
+              row:
+                type: integer
+                example: 10
+              message:
+                type: string
+                example: "Número de telefone inválido"
+        completed_at:
+          type: string
+          format: date-time
+          example: "2023-06-01T10:45:00Z"
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "cat_123456"
+        name:
+          type: string
+          example: "Cliente"
+        description:
+          type: string
+          example: "Clientes ativos"
+        contacts_count:
+          type: integer
+          example: 1250
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-10T08:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-10T08:00:00Z"
+
+    CategoryCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "VIP"
+        description:
+          type: string
+          example: "Clientes premium com alto valor de compra"
+
+    CategoryUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "VIP Premium"
+        description:
+          type: string
+          example: "Clientes premium com alto valor de compra"
+
+    CategoriesList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "cmp_123456"
+        name:
+          type: string
+          example: "Promoção Maio"
+        description:
+          type: string
+          example: "Campanha promocional de maio"
+        status:
+          type: string
+          enum: [ativa, pausada, rascunho, agendada, encerrada]
+          example: "ativa"
+        funnel_id:
+          type: string
+          example: "fnl_123456"
+        funnel_name:
+          type: string
+          example: "Vendas"
+        waba_number:
+          type: string
+          example: "+5511987654321"
+        contacts_count:
+          type: integer
+          example: 1250
+        scheduled_for:
+          type: string
+          format: date-time
+          example: "2023-05-07T14:00:00Z"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-05-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-05-01T10:00:00Z"
+
+    CampaignCreate:
+      type: object
+      required:
+        - name
+        - funnel_id
+        - waba_number
+        - contacts
+      properties:
+        name:
+          type: string
+          example: "Black Friday"
+        description:
+          type: string
+          example: "Campanha de Black Friday 2023"
+        funnel_id:
+          type: string
+          example: "fnl_123456"
+        waba_number:
+          type: string
+          example: "+5511987654321"
+        contacts:
+          type: array
+          items:
+            type: string
+          description: "Array de IDs de categorias ou contatos"
+          example: ["cat_123456"]
+        scheduled_for:
+          type: string
+          format: date-time
+          example: "2023-11-24T00:00:00Z"
+
+    CampaignUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Black Friday 2023"
+        description:
+          type: string
+          example: "Campanha atualizada de Black Friday 2023"
+        status:
+          type: string
+          enum: [ativa, pausada, rascunho, agendada, encerrada]
+          example: "pausada"
+        scheduled_for:
+          type: string
+          format: date-time
+          example: "2023-11-25T00:00:00Z"
+
+    CampaignsList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+
+    Funnel:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "fnl_123456"
+        name:
+          type: string
+          example: "Onboarding de Clientes"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          example: "ativo"
+        steps_count:
+          type: integer
+          example: 3
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-02-15T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-05-10T14:30:00Z"
+
+    FunnelDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "fnl_123456"
+        name:
+          type: string
+          example: "Onboarding de Clientes"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          example: "ativo"
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunnelStep'
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-02-15T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-05-10T14:30:00Z"
+
+    FunnelStep:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "stp_123456"
+        name:
+          type: string
+          example: "Boas-vindas"
+        order:
+          type: integer
+          example: 1
+        template_id:
+          type: string
+          example: "tpl_123456"
+        template_name:
+          type: string
+          example: "Boas-vindas"
+        wait_time:
+          type: integer
+          example: 24
+        wait_time_unit:
+          type: string
+          enum: [minutes, hours, days]
+          example: "hours"
+
+    FunnelCreate:
+      type: object
+      required:
+        - name
+        - steps
+      properties:
+        name:
+          type: string
+          example: "Recuperação de Carrinho"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          default: "ativo"
+          example: "ativo"
+        steps:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - order
+              - template_id
+            properties:
+              name:
+                type: string
+                example: "Lembrete Inicial"
+              order:
+                type: integer
+                example: 1
+              template_id:
+                type: string
+                example: "tpl_123459"
+              wait_time:
+                type: integer
+                example: 1
+              wait_time_unit:
+                type: string
+                enum: [minutes, hours, days]
+                default: "hours"
+                example: "hours"
+
+    FunnelUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Recuperação de Carrinho Atualizado"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          example: "inativo"
+        steps:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "stp_123459"
+              name:
+                type: string
+                example: "Lembrete Inicial Atualizado"
+              order:
+                type: integer
+                example: 1
+              template_id:
+                type: string
+                example: "tpl_123459"
+              wait_time:
+                type: integer
+                example: 2
+              wait_time_unit:
+                type: string
+                enum: [minutes, hours, days]
+                example: "hours"
+
+    FunnelsList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Funnel'
+
+    Template:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "tpl_123456"
+        name:
+          type: string
+          example: "Boas-vindas"
+        status:
+          type: string
+          enum: [aprovado, pendente, recusado]
+          example: "aprovado"
+        language:
+          type: string
+          example: "pt_BR"
+        category:
+          type: string
+          enum: [marketing, utility, authentication]
+          example: "marketing"
+        content:
+          type: string
+          example: "Olá {{nome}}, seja bem-vindo à nossa plataforma! Estamos felizes em tê-lo conosco."
+        variables:
+          type: array
+          items:
+            type: string
+          example: ["nome"]
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-04-15T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-04-15T10:00:00Z"
+
+    TemplateCreate:
+      type: object
+      required:
+        - name
+        - language
+        - category
+        - content
+      properties:
+        name:
+          type: string
+          example: "Promoção Especial"
+        language:
+          type: string
+          example: "pt_BR"
+        category:
+          type: string
+          enum: [marketing, utility, authentication]
+          example: "marketing"
+        content:
+          type: string
+          example: "Olá {{nome}}, temos uma oferta especial para você! Use o cupom {{cupom}} para {{desconto}}% de desconto em sua próxima compra."
+        variables:
+          type: array
+          items:
+            type: string
+          example: ["nome", "cupom", "desconto"]
+
+    TemplateUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Promoção Especial Atualizada"
+        content:
+          type: string
+          example: "Olá {{nome}}, temos uma oferta especial para você! Use o cupom {{cupom}} para {{desconto}}% de desconto em sua próxima compra. Válido até {{data_validade}}."
+        variables:
+          type: array
+          items:
+            type: string
+          example: ["nome", "cupom", "desconto", "data_validade"]
+
+    TemplatesList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Template'
+
+    Send:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "snd_123456"
+        contact_id:
+          type: string
+          example: "cnt_123456"
+        contact_name:
+          type: string
+          example: "João Silva"
+        phone:
+          type: string
+          example: "+5511987654321"
+        campaign_id:
+          type: string
+          example: "cmp_123456"
+        campaign_name:
+          type: string
+          example: "Promoção Maio"
+        funnel_step_id:
+          type: string
+          example: "stp_123456"
+        funnel_step_name:
+          type: string
+          example: "Boas-vindas"
+        template_id:
+          type: string
+          example: "tpl_123456"
+        template_name:
+          type: string
+          example: "Boas-vindas"
+        status:
+          type: string
+          enum: [pendente, enviado, entregue, lido, erro]
+          example: "entregue"
+        message:
+          type: string
+          example: "Olá João, temos uma promoção especial para você! Aproveite 20% de desconto em todos os produtos."
+        date:
+          type: string
+          format: date-time
+          example: "2023-05-07T14:32:00Z"
+        api_response:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "wamid.abcdefg123456789"
+            status:
+              type: string
+              example: "delivered"
+            timestamp:
+              type: string
+              example: "1683472320"
+            error:
+              type: string
+              example: null
+        timestamps:
+          type: object
+          properties:
+            scheduled:
+              type: string
+              format: date-time
+              example: null
+            sent:
+              type: string
+              format: date-time
+              example: "2023-05-07T14:32:00Z"
+            delivered:
+              type: string
+              format: date-time
+              example: "2023-05-07T14:32:05Z"
+            read:
+              type: string
+              format: date-time
+              example: "2023-05-07T14:35:22Z"
+            error:
+              type: string
+              format: date-time
+              example: null
+
+    SendsList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Send'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    DirectMessage:
+      type: object
+      required:
+        - to
+        - template_id
+      properties:
+        to:
+          type: string
+          example: "+5511987654321"
+        template_id:
+          type: string
+          example: "tpl_123456"
+        variables:
+          type: object
+          additionalProperties: true
+          example:
+            nome: "João Silva"
+            cupom: "PROMO20"
+            desconto: "20"
+        waba_number:
+          type: string
+          example: "+5511987654321"
+
+    DirectMessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "snd_123458"
+        status:
+          type: string
+          enum: [pendente, enviado]
+          example: "enviado"
+        message_id:
+          type: string
+          example: "wamid.abcdefg123456790"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-06-01T15:30:00Z"
+
+    SMSMessage:
+      type: object
+      required:
+        - to
+        - message
+      properties:
+        to:
+          type: string
+          example: "+5511987654321"
+        message:
+          type: string
+          example: "Olá João, temos uma promoção especial para você! Use o cupom PROMO20 para 20% de desconto."
+        sender_id:
+          type: string
+          example: "MinhaEmpresa"
+
+    SMSMessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "sms_123456"
+        status:
+          type: string
+          enum: [pendente, enviado]
+          example: "enviado"
+        message_id:
+          type: string
+          example: "sms_provider_id_123456"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-06-01T15:45:00Z"
+
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "whk_123456"
+        url:
+          type: string
+          format: uri
+          example: "https://api.seudominio.com/webhook/whatsapp"
+        events:
+          type: array
+          items:
+            type: string
+            enum:
+              - message.status.sent
+              - message.status.delivered
+              - message.status.read
+              - message.status.failed
+              - template.status.approved
+              - template.status.rejected
+              - campaign.started
+              - campaign.completed
+              - import.completed
+          example: ["message.status", "template.status"]
+        active:
+          type: boolean
+          example: true
+        verify_token:
+          type: string
+          example: "seu_token_secreto"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-03-10T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-03-10T09:00:00Z"
+
+    WebhookCreate:
+      type: object
+      required:
+        - url
+        - events
+      properties:
+        url:
+          type: string
+          format: uri
+          example: "https://api.seudominio.com/webhook/whatsapp"
+        events:
+          type: array
+          items:
+            type: string
+            enum:
+              - message.status.sent
+              - message.status.delivered
+              - message.status.read
+              - message.status.failed
+              - template.status.approved
+              - template.status.rejected
+              - campaign.started
+              - campaign.completed
+              - import.completed
+          example: ["message.status", "template.status"]
+        active:
+          type: boolean
+          default: true
+          example: true
+
+    WebhooksList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+
+    MetaCredentials:
+      type: object
+      required:
+        - app_id
+        - app_secret
+      properties:
+        app_id:
+          type: string
+          example: "1234567890"
+        app_secret:
+          type: string
+          example: "abcdef1234567890"
+
+    WABANumber:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "waba_123456"
+        number:
+          type: string
+          example: "+5511987654321"
+        display_name:
+          type: string
+          example: "Atendimento Principal"
+        status:
+          type: string
+          enum: [connected, disconnected, pending]
+          example: "connected"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T10:00:00Z"
+
+    WABANumberCreate:
+      type: object
+      required:
+        - number
+        - display_name
+      properties:
+        number:
+          type: string
+          example: "+5511987654321"
+        display_name:
+          type: string
+          example: "Atendimento Principal"
+
+    WABANumbersList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WABANumber'
+
+    SMSProvider:
+      type: object
+      required:
+        - provider
+        - api_url
+        - api_key
+      properties:
+        provider:
+          type: string
+          enum: [twilio, zenvia, infobip, sinch, custom]
+          example: "twilio"
+        api_url:
+          type: string
+          format: uri
+          example: "https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json"
+        api_key:
+          type: string
+          example: "sua_api_key"
+        api_secret:
+          type: string
+          example: "seu_api_secret"
+        sender_id:
+          type: string
+          example: "MinhaEmpresa"
+        use_as_fallback:
+          type: boolean
+          default: false
+          example: true
+
+    DashboardStats:
+      type: object
+      properties:
+        total_contacts:
+          type: integer
+          example: 5842
+        total_campaigns:
+          type: integer
+          example: 24
+        total_sends:
+          type: integer
+          example: 12458
+        total_templates:
+          type: integer
+          example: 18
+        sends_by_day:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+                example: "2023-05-01"
+              count:
+                type: integer
+                example: 1200
+        sends_by_status:
+          type: object
+          properties:
+            pendente:
+              type: integer
+              example: 450
+            enviado:
+              type: integer
+              example: 2800
+            entregue:
+              type: integer
+              example: 1900
+            lido:
+              type: integer
+              example: 1200
+            erro:
+              type: integer
+              example: 350
+        recent_sends:
+          type: array
+          items:
+            $ref: '#/components/schemas/Send'
+
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 150
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 20
+        pages:
+          type: integer
+          example: 8
+
+security:
+  - bearerAuth: []
+  - apiKeyAuth: []
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Login de usuário
+      description: Autentica um usuário e retorna um token JWT
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/register:
+    post:
+      tags:
+        - Autenticação
+      summary: Cadastro de usuário
+      description: Registra um novo usuário no sistema
+      operationId: register
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - company
+              properties:
+                name:
+                  type: string
+                  example: "João Silva"
+                email:
+                  type: string
+                  format: email
+                  example: "joao@exemplo.com"
+                password:
+                  type: string
+                  format: password
+                  example: "senha123"
+                company:
+                  type: string
+                  example: "Empresa XYZ"
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/forgot-password:
+    post:
+      tags:
+        - Autenticação
+      summary: Recuperação de senha
+      description: Envia um email com link para redefinição de senha
+      operationId: forgotPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "usuario@exemplo.com"
+      responses:
+        '200':
+          description: Email enviado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Email de recuperação enviado com sucesso"
+        '404':
+          description: Email não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/reset-password:
+    post:
+      tags:
+        - Autenticação
+      summary: Redefinição de senha
+      description: Redefine a senha do usuário usando o token enviado por email
+      operationId: resetPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - password
+              properties:
+                token:
+                  type: string
+                  example: "reset_token_123456"
+                password:
+                  type: string
+                  format: password
+                  example: "nova_senha123"
+      responses:
+        '200':
+          description: Senha redefinida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Senha redefinida com sucesso"
+        '400':
+          description: Token inválido ou expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /contacts:
+    get:
+      tags:
+        - Contatos
+      summary: Listar contatos
+      description: Retorna uma lista paginada de contatos
+      operationId: listContacts
+      parameters:
+        - name: page
+          in: query
+          description: Número da página
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Itens por página
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: search
+          in: query
+          description: Termo de busca (nome, telefone ou email)
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: ID da categoria para filtrar
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status do contato (ativo/inativo)
+          required: false
+          schema:
+            type: string
+            enum: [ativo, inativo]
+      responses:
+        '200':
+          description: Lista de contatos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactsList'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Contatos
+      summary: Criar contato
+      description: Cria um novo contato
+      operationId: createContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactCreate'
+      responses:
+        '201':
+          description: Contato criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Contato já existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /contacts/{contact_id}:
+    get:
+      tags:
+        - Contatos
+      summary: Obter contato
+      description: Retorna os detalhes de um contato específico
+      operationId: getContact
+      parameters:
+        - name: contact_id
+          in: path
+          description: ID do contato
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do contato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '404':
+          description: Contato não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Contatos
+      summary: Atualizar contato
+      description: Atualiza os dados de um contato existente
+      operationId: updateContact
+      parameters:
+        - name: contact_id
+          in: path
+          description: ID do contato
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactUpdate'
+      responses:
+        '200':
+          description: Contato atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Contato não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Contatos
+      summary: Excluir contato
+      description: Remove um contato do sistema
+      operationId: deleteContact
+      parameters:
+        - name: contact_id
+          in: path
+          description: ID do contato
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contato excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Contato excluído com sucesso"
+        '404':
+          description: Contato não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /contacts/import:
+    post:
+      tags:
+        - Contatos
+      summary: Importar contatos
+      description: Importa contatos a partir de um arquivo CSV ou Excel
+      operationId: importContacts
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Arquivo CSV ou Excel
+                category_id:
+                  type: string
+                  description: ID da categoria para os contatos importados
+      responses:
+        '202':
+          description: Importação iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportJob'
+        '400':
+          description: Arquivo inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /contacts/import/{job_id}:
+    get:
+      tags:
+        - Contatos
+      summary: Status da importação
+      description: Verifica o status de um job de importação
+      operationId: importStatus
+      parameters:
+        - name: job_id
+          in: path
+          description: ID do job de importação
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status da importação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportJob'
+        '404':
+          description: Job não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /categories:
+    get:
+      tags:
+        - Categorias
+      summary: Listar categorias
+      description: Retorna uma lista de todas as categorias
+      operationId: listCategories
+      responses:
+        '200':
+          description: Lista de categorias
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesList'
+
+    post:
+      tags:
+        - Categorias
+      summary: Criar categoria
+      description: Cria uma nova categoria
+      operationId: createCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreate'
+      responses:
+        '201':
+          description: Categoria criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /categories/{category_id}:
+    get:
+      tags:
+        - Categorias
+      summary: Obter categoria
+      description: Retorna os detalhes de uma categoria específica
+      operationId: getCategory
+      parameters:
+        - name: category_id
+          in: path
+          description: ID da categoria
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes da categoria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Categorias
+      summary: Atualizar categoria
+      description: Atualiza os dados de uma categoria existente
+      operationId: updateCategory
+      parameters:
+        - name: category_id
+          in: path
+          description: ID da categoria
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryUpdate'
+      responses:
+        '200':
+          description: Categoria atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Categorias
+      summary: Excluir categoria
+      description: Remove uma categoria do sistema
+      operationId: deleteCategory
+      parameters:
+        - name: category_id
+          in: path
+          description: ID da categoria
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Categoria excluída com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Categoria excluída com sucesso"
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Categoria em uso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /campaigns:
+    get:
+      tags:
+        - Campanhas
+      summary: Listar campanhas
+      description: Retorna uma lista de todas as campanhas
+      operationId: listCampaigns
+      parameters:
+        - name: status
+          in: query
+          description: Filtrar por status
+          required: false
+          schema:
+            type: string
+            enum: [ativa, pausada, rascunho, agendada, encerrada]
+      responses:
+        '200':
+          description: Lista de campanhas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignsList'
+
+    post:
+      tags:
+        - Campanhas
+      summary: Criar campanha
+      description: Cria uma nova campanha
+      operationId: createCampaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignCreate'
+      responses:
+        '201':
+          description: Campanha criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /campaigns/{campaign_id}:
+    get:
+      tags:
+        - Campanhas
+      summary: Obter campanha
+      description: Retorna os detalhes de uma campanha específica
+      operationId: getCampaign
+      parameters:
+        - name: campaign_id
+          in: path
+          description: ID da campanha
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes da campanha
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '404':
+          description: Campanha não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Campanhas
+      summary: Atualizar campanha
+      description: Atualiza os dados de uma campanha existente
+      operationId: updateCampaign
+      parameters:
+        - name: campaign_id
+          in: path
+          description: ID da campanha
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignUpdate'
+      responses:
+        '200':
+          description: Campanha atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Campanha não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Campanhas
+      summary: Excluir campanha
+      description: Remove uma campanha do sistema
+      operationId: deleteCampaign
+      parameters:
+        - name: campaign_id
+          in: path
+          description: ID da campanha
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Campanha excluída com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Campanha excluída com sucesso"
+        '404':
+          description: Campanha não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /campaigns/{campaign_id}/status:
+    put:
+      tags:
+        - Campanhas
+      summary: Atualizar status da campanha
+      description: Atualiza o status de uma campanha (pausar/retomar)
+      operationId: updateCampaignStatus
+      parameters:
+        - name: campaign_id
+          in: path
+          description: ID da campanha
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [ativa, pausada]
+                  example: "pausada"
+      responses:
+        '200':
+          description: Status atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "cmp_123457"
+                  name:
+                    type: string
+                    example: "Black Friday"
+                  status:
+                    type: string
+                    example: "pausada"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-01T12:00:00Z"
+        '404':
+          description: Campanha não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /funnels:
+    get:
+      tags:
+        - Funis
+      summary: Listar funis
+      description: Retorna uma lista de todos os funis
+      operationId: listFunnels
+      responses:
+        '200':
+          description: Lista de funis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunnelsList'
+
+    post:
+      tags:
+        - Funis
+      summary: Criar funil
+      description: Cria um novo funil
+      operationId: createFunnel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FunnelCreate'
+      responses:
+        '201':
+          description: Funil criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunnelDetail'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /funnels/{funnel_id}:
+    get:
+      tags:
+        - Funis
+      summary: Obter funil
+      description: Retorna os detalhes de um funil específico
+      operationId: getFunnel
+      parameters:
+        - name: funnel_id
+          in: path
+          description: ID do funil
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do funil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunnelDetail'
+        '404':
+          description: Funil não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Funis
+      summary: Atualizar funil
+      description: Atualiza os dados de um funil existente
+      operationId: updateFunnel
+      parameters:
+        - name: funnel_id
+          in: path
+          description: ID do funil
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FunnelUpdate'
+      responses:
+        '200':
+          description: Funil atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunnelDetail'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funil não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Funis
+      summary: Excluir funil
+      description: Remove um funil do sistema
+      operationId: deleteFunnel
+      parameters:
+        - name: funnel_id
+          in: path
+          description: ID do funil
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Funil excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Funil excluído com sucesso"
+        '404':
+          description: Funil não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Funil em uso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /templates:
+    get:
+      tags:
+        - Templates
+      summary: Listar templates
+      description: Retorna uma lista de todos os templates
+      operationId: listTemplates
+      parameters:
+        - name: status
+          in: query
+          description: Filtrar por status
+          required: false
+          schema:
+            type: string
+            enum: [aprovado, pendente, recusado]
+        - name: language
+          in: query
+          description: Filtrar por idioma
+          required: false
+          schema:
+            type: string
+            example: "pt_BR"
+      responses:
+        '200':
+          description: Lista de templates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplatesList'
+
+    post:
+      tags:
+        - Templates
+      summary: Criar template
+      description: Cria um novo template
+      operationId: createTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateCreate'
+      responses:
+        '201':
+          description: Template criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /templates/{template_id}:
+    get:
+      tags:
+        - Templates
+      summary: Obter template
+      description: Retorna os detalhes de um template específico
+      operationId: getTemplate
+      parameters:
+        - name: template_id
+          in: path
+          description: ID do template
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do template
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '404':
+          description: Template não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Templates
+      summary: Atualizar template
+      description: Atualiza os dados de um template existente
+      operationId: updateTemplate
+      parameters:
+        - name: template_id
+          in: path
+          description: ID do template
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateUpdate'
+      responses:
+        '200':
+          description: Template atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Template não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Templates
+      summary: Excluir template
+      description: Remove um template do sistema
+      operationId: deleteTemplate
+      parameters:
+        - name: template_id
+          in: path
+          description: ID do template
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Template excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Template excluído com sucesso"
+        '404':
+          description: Template não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Template em uso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sends:
+    get:
+      tags:
+        - Disparos
+      summary: Listar disparos
+      description: Retorna uma lista paginada de disparos
+      operationId: listSends
+      parameters:
+        - name: campaign_id
+          in: query
+          description: ID da campanha
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status do envio
+          required: false
+          schema:
+            type: string
+            enum: [pendente, enviado, entregue, lido, erro]
+        - name: contact_id
+          in: query
+          description: ID do contato
+          required: false
+          schema:
+            type: string
+        - name: date_from
+          in: query
+          description: Data inicial (formato ISO)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: date_to
+          in: query
+          description: Data final (formato ISO)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: page
+          in: query
+          description: Número da página
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Itens por página
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Lista de disparos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendsList'
+
+  /sends/{send_id}:
+    get:
+      tags:
+        - Disparos
+      summary: Obter detalhes do disparo
+      description: Retorna os detalhes de um disparo específico
+      operationId: getSend
+      parameters:
+        - name: send_id
+          in: path
+          description: ID do disparo
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do disparo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Send'
+        '404':
+          description: Disparo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sends/{send_id}/resend:
+    post:
+      tags:
+        - Disparos
+      summary: Reenviar mensagem
+      description: Reenvia uma mensagem que falhou
+      operationId: resendMessage
+      parameters:
+        - name: send_id
+          in: path
+          description: ID do disparo
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Mensagem reenviada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "snd_123457"
+                  original_send_id:
+                    type: string
+                    example: "snd_123456"
+                  status:
+                    type: string
+                    example: "pendente"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-01T15:00:00Z"
+        '404':
+          description: Disparo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Disparo não está em estado de erro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /messages/whatsapp:
+    post:
+      tags:
+        - Disparos
+      summary: Enviar mensagem WhatsApp
+      description: Envia uma mensagem direta via WhatsApp
+      operationId: sendWhatsAppMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectMessage'
+      responses:
+        '200':
+          description: Mensagem enviada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectMessageResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /messages/sms:
+    post:
+      tags:
+        - Disparos
+      summary: Enviar mensagem SMS
+      description: Envia uma mensagem direta via SMS
+      operationId: sendSMSMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SMSMessage'
+      responses:
+        '200':
+          description: Mensagem enviada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMSMessageResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Serviço de SMS não configurado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /webhooks:
+    get:
+      tags:
+        - Webhooks
+      summary: Listar webhooks
+      description: Retorna uma lista de todos os webhooks configurados
+      operationId: listWebhooks
+      responses:
+        '200':
+          description: Lista de webhooks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhooksList'
+
+    post:
+      tags:
+        - Webhooks
+      summary: Criar webhook
+      description: Cria um novo webhook
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCreate'
+      responses:
+        '201':
+          description: Webhook criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /webhooks/{webhook_id}:
+     
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /webhooks/{webhook_id}:
+    get:
+      tags:
+        - Webhooks
+      summary: Obter webhook
+      description: Retorna os detalhes de um webhook específico
+      operationId: getWebhook
+      parameters:
+        - name: webhook_id
+          in: path
+          description: ID do webhook
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do webhook
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '404':
+          description: Webhook não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Webhooks
+      summary: Atualizar webhook
+      description: Atualiza os dados de um webhook existente
+      operationId: updateWebhook
+      parameters:
+        - name: webhook_id
+          in: path
+          description: ID do webhook
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCreate'
+      responses:
+        '200':
+          description: Webhook atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Webhook não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Webhooks
+      summary: Excluir webhook
+      description: Remove um webhook do sistema
+      operationId: deleteWebhook
+      parameters:
+        - name: webhook_id
+          in: path
+          description: ID do webhook
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Webhook excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Webhook excluído com sucesso"
+        '404':
+          description: Webhook não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /settings/meta:
+    get:
+      tags:
+        - Configurações
+      summary: Obter credenciais Meta
+      description: Retorna as credenciais configuradas da Meta Business Platform
+      operationId: getMetaCredentials
+      responses:
+        '200':
+          description: Credenciais Meta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetaCredentials'
+
+    put:
+      tags:
+        - Configurações
+      summary: Atualizar credenciais Meta
+      description: Atualiza as credenciais da Meta Business Platform
+      operationId: updateMetaCredentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetaCredentials'
+      responses:
+        '200':
+          description: Credenciais atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetaCredentials'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /settings/waba:
+    get:
+      tags:
+        - Configurações
+      summary: Listar números WABA
+      description: Retorna uma lista de todos os números WhatsApp Business API configurados
+      operationId: listWABANumbers
+      responses:
+        '200':
+          description: Lista de números WABA
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WABANumbersList'
+
+    post:
+      tags:
+        - Configurações
+      summary: Adicionar número WABA
+      description: Adiciona um novo número WhatsApp Business API
+      operationId: addWABANumber
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WABANumberCreate'
+      responses:
+        '201':
+          description: Número WABA adicionado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WABANumber'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /settings/waba/{waba_id}:
+    get:
+      tags:
+        - Configurações
+      summary: Obter número WABA
+      description: Retorna os detalhes de um número WABA específico
+      operationId: getWABANumber
+      parameters:
+        - name: waba_id
+          in: path
+          description: ID do número WABA
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do número WABA
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WABANumber'
+        '404':
+          description: Número WABA não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Configurações
+      summary: Atualizar número WABA
+      description: Atualiza os dados de um número WABA existente
+      operationId: updateWABANumber
+      parameters:
+        - name: waba_id
+          in: path
+          description: ID do número WABA
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WABANumberCreate'
+      responses:
+        '200':
+          description: Número WABA atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WABANumber'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Número WABA não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Configurações
+      summary: Excluir número WABA
+      description: Remove um número WABA do sistema
+      operationId: deleteWABANumber
+      parameters:
+        - name: waba_id
+          in: path
+          description: ID do número WABA
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Número WABA excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Número WABA excluído com sucesso"
+        '404':
+          description: Número WABA não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Número WABA em uso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /settings/sms:
+    get:
+      tags:
+        - Configurações
+      summary: Obter configuração de SMS
+      description: Retorna a configuração atual do provedor de SMS
+      operationId: getSMSConfig
+      responses:
+        '200':
+          description: Configuração de SMS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMSProvider'
+        '404':
+          description: Configuração de SMS não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Configurações
+      summary: Configurar provedor SMS
+      description: Configura um provedor de SMS para envio de mensagens alternativas
+      operationId: configureSMSProvider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SMSProvider'
+      responses:
+        '200':
+          description: Provedor SMS configurado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMSProvider'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /settings/sms/test:
+    post:
+      tags:
+        - Configurações
+      summary: Testar configuração SMS
+      description: Envia uma mensagem de teste para verificar a configuração do SMS
+      operationId: testSMSConfig
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - phone
+              properties:
+                phone:
+                  type: string
+                  example: "+5511987654321"
+      responses:
+        '200':
+          description: Teste enviado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Mensagem de teste enviada com sucesso"
+                  message_id:
+                    type: string
+                    example: "sms_provider_id_123456"
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Serviço de SMS não configurado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /dashboard/stats:
+    get:
+      tags:
+        - Relatórios
+      summary: Estatísticas do dashboard
+      description: Retorna estatísticas gerais para o dashboard
+      operationId: getDashboardStats
+      responses:
+        '200':
+          description: Estatísticas do dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardStats'
+
+  /reports/sends:
+    get:
+      tags:
+        - Relatórios
+      summary: Relatório de disparos
+      description: Gera um relatório de disparos com filtros
+      operationId: getSendsReport
+      parameters:
+        - name: start_date
+          in: query
+          description: Data inicial (formato ISO)
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          description: Data final (formato ISO)
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: campaign_id
+          in: query
+          description: ID da campanha
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status do envio
+          required: false
+          schema:
+            type: string
+            enum: [pendente, enviado, entregue, lido, erro]
+        - name: format
+          in: query
+          description: Formato do relatório
+          required: false
+          schema:
+            type: string
+            enum: [json, csv, xlsx]
+            default: json
+      responses:
+        '200':
+          description: Relatório gerado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 12458
+                  by_status:
+                    type: object
+                    properties:
+                      pendente:
+                        type: integer
+                        example: 450
+                      enviado:
+                        type: integer
+                        example: 2800
+                      entregue:
+                        type: integer
+                        example: 1900
+                      lido:
+                        type: integer
+                        example: 1200
+                      erro:
+                        type: integer
+                        example: 350
+                  by_day:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                          example: "2023-05-01"
+                        count:
+                          type: integer
+                          example: 1200
+                  by_campaign:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        campaign_id:
+                          type: string
+                          example: "cmp_123456"
+                        campaign_name:
+                          type: string
+                          example: "Promoção Maio"
+                        count:
+                          type: integer
+                          example: 5000
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Parâmetros inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /reports/campaigns/{campaign_id}:
+    get:
+      tags:
+        - Relatórios
+      summary: Relatório de campanha
+      description: Gera um relatório detalhado de uma campanha específica
+      operationId: getCampaignReport
+      parameters:
+        - name: campaign_id
+          in: path
+          description: ID da campanha
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: Formato do relatório
+          required: false
+          schema:
+            type: string
+            enum: [json, csv, xlsx]
+            default: json
+      responses:
+        '200':
+          description: Relatório gerado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  campaign:
+                    $ref: '#/components/schemas/Campaign'
+                  stats:
+                    type: object
+                    properties:
+                      total_contacts:
+                        type: integer
+                        example: 1250
+                      total_sends:
+                        type: integer
+                        example: 1250
+                      by_status:
+                        type: object
+                        properties:
+                          pendente:
+                            type: integer
+                            example: 50
+                          enviado:
+                            type: integer
+                            example: 200
+                          entregue:
+                            type: integer
+                            example: 800
+                          lido:
+                            type: integer
+                            example: 150
+                          erro:
+                            type: integer
+                            example: 50
+                      delivery_rate:
+                        type: number
+                        format: float
+                        example: 96
+                      read_rate:
+                        type: number
+                        format: float
+                        example: 12
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Campanha não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

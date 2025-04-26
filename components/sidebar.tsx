@@ -6,12 +6,12 @@ import {
   BarChart3,
   Contact,
   FolderKanban,
-  LayoutDashboard,
+  Home,
+  LayoutTemplate,
   MessageSquare,
   Send,
   Settings,
   Tag,
-  LayoutTemplateIcon as Templates,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -23,7 +23,7 @@ const sidebarItems = [
   {
     name: "Dashboard",
     href: "/dashboard",
-    icon: LayoutDashboard,
+    icon: Home,
   },
   {
     name: "Contatos",
@@ -48,12 +48,17 @@ const sidebarItems = [
   {
     name: "Templates",
     href: "/templates",
-    icon: Templates,
+    icon: LayoutTemplate,
   },
   {
     name: "Disparos",
     href: "/disparos",
     icon: Send,
+  },
+  {
+    name: "Relatórios",
+    href: "/relatorios",
+    icon: BarChart3,
   },
   {
     name: "Configurações",

@@ -40,7 +40,7 @@ export function NewFunnelModal({ children }: { children: React.ReactNode }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Novo Funil</DialogTitle>
           <DialogDescription>Crie um novo funil de mensagens automatizadas.</DialogDescription>

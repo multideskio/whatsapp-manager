@@ -1,7 +1,9 @@
+"use client"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus } from "lucide-react"
+import { Plus, ExternalLink } from "lucide-react"
 import { NewFunnelModal } from "@/components/new-funnel-modal"
 
 const funnels = [
@@ -38,6 +40,12 @@ const funnels = [
 ]
 
 export default function FunnelsPage() {
+  const router = useRouter()
+
+  const handleViewFunnel = (id: string) => {
+    router.push(`/funis/${id}`)
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -53,7 +61,7 @@ export default function FunnelsPage() {
         </NewFunnelModal>
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             <TableRow>
@@ -74,9 +82,15 @@ export default function FunnelsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm">
-                    Editar
-                  </Button>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => handleViewFunnel(funnel.id)}>
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      Ver Kanban
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      Editar
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
