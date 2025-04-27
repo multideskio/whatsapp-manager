@@ -11,6 +11,7 @@ const templates = [
     status: "aprovado",
     language: "pt_BR",
     lastUpdated: "15/04/2023",
+    bm: "BM Principal",
   },
   {
     id: "2",
@@ -18,6 +19,7 @@ const templates = [
     status: "aprovado",
     language: "pt_BR",
     lastUpdated: "20/04/2023",
+    bm: "BM Principal",
   },
   {
     id: "3",
@@ -25,6 +27,7 @@ const templates = [
     status: "pendente",
     language: "pt_BR",
     lastUpdated: "01/05/2023",
+    bm: "BM Secundária",
   },
   {
     id: "4",
@@ -32,6 +35,7 @@ const templates = [
     status: "aprovado",
     language: "pt_BR",
     lastUpdated: "10/05/2023",
+    bm: "BM Principal",
   },
   {
     id: "5",
@@ -39,6 +43,7 @@ const templates = [
     status: "recusado",
     language: "pt_BR",
     lastUpdated: "05/05/2023",
+    bm: "BM Secundária",
   },
 ]
 
@@ -65,6 +70,7 @@ export default function TemplatesPage() {
               <TableHead>Nome</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Idioma</TableHead>
+              <TableHead>Business Manager</TableHead>
               <TableHead>Última atualização</TableHead>
               <TableHead className="text-right">Ações</TableHead>
             </TableRow>
@@ -77,6 +83,7 @@ export default function TemplatesPage() {
                   <TemplateStatusBadge status={template.status} />
                 </TableCell>
                 <TableCell>{template.language}</TableCell>
+                <TableCell>{template.bm}</TableCell>
                 <TableCell>{template.lastUpdated}</TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="sm">

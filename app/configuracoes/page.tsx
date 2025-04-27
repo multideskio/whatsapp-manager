@@ -5,8 +5,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export default function SettingsPage() {
   return (
@@ -16,32 +14,12 @@ export default function SettingsPage() {
         <p className="text-muted-foreground">Gerencie as configurações da sua conta</p>
       </div>
 
-      <Tabs defaultValue="meta" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="meta">Credenciais Meta</TabsTrigger>
+      <Tabs defaultValue="webhook" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="webhook">Webhook</TabsTrigger>
-          <TabsTrigger value="waba">Números WABA</TabsTrigger>
           <TabsTrigger value="sms">Integração SMS</TabsTrigger>
         </TabsList>
-        <TabsContent value="meta" className="space-y-4 py-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Credenciais Meta</CardTitle>
-              <CardDescription>Configure suas credenciais da Meta Business Platform.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="app-id">App ID</Label>
-                <Input id="app-id" placeholder="Seu App ID" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="app-secret">App Secret</Label>
-                <Input id="app-secret" type="password" placeholder="Seu App Secret" />
-              </div>
-              <Button>Salvar alterações</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+
         <TabsContent value="webhook" className="space-y-4 py-4">
           <Card>
             <CardHeader>
@@ -57,53 +35,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="waba" className="space-y-4 py-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Números WABA</CardTitle>
-              <CardDescription>Gerencie seus números WhatsApp Business API (WABA).</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Número</TableHead>
-                    <TableHead>Nome de exibição</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>+5511987654321</TableCell>
-                    <TableCell>Atendimento Principal</TableCell>
-                    <TableCell>
-                      <Badge variant="default">Conectado</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        Editar
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>+5511987654322</TableCell>
-                    <TableCell>Suporte Técnico</TableCell>
-                    <TableCell>
-                      <Badge variant="default">Conectado</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        Editar
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-              <Button>Adicionar número</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+
         <TabsContent value="sms" className="space-y-4 py-4">
           <Card>
             <CardHeader>

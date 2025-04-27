@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -5,36 +7,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
+import { Building2 } from "lucide-react"
+import Link from "next/link"
 
 export default function SettingsPage() {
   return (
     <div className="container max-w-4xl mx-auto py-10">
-      <Tabs defaultValue="meta" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="meta">Credenciais Meta</TabsTrigger>
+      <Tabs defaultValue="webhook" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="webhook">Webhook</TabsTrigger>
-          <TabsTrigger value="waba">Números WABA</TabsTrigger>
           <TabsTrigger value="sms">Integração SMS</TabsTrigger>
         </TabsList>
-        <TabsContent value="meta" className="space-y-4 py-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Credenciais Meta</CardTitle>
-              <CardDescription>Configure suas credenciais da Meta Business Platform.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="app-id">App ID</Label>
-                <Input id="app-id" placeholder="Seu App ID" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="app-secret">App Secret</Label>
-                <Input id="app-secret" type="password" placeholder="Seu App Secret" />
-              </div>
-              <Button>Salvar alterações</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+
         <TabsContent value="webhook" className="space-y-4 py-4">
           <Card>
             <CardHeader>
@@ -50,21 +34,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="waba" className="space-y-4 py-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Números WABA</CardTitle>
-              <CardDescription>Gerencie seus números WhatsApp Business API (WABA).</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="waba-number">Número WABA</Label>
-                <Input id="waba-number" placeholder="5511999999999" />
-              </div>
-              <Button>Adicionar número</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+
         <TabsContent value="sms" className="space-y-4 py-4">
           <Card>
             <CardHeader>
@@ -127,6 +97,26 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <div className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Business Managers</CardTitle>
+            <CardDescription>Gerencie suas Business Managers da Meta para integração com WhatsApp.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-4">
+              <p className="mb-4">As configurações de Business Managers foram movidas para uma seção dedicada.</p>
+              <Button asChild>
+                <Link href="/bms" className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  <span>Ir para Business Managers</span>
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

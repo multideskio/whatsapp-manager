@@ -12,6 +12,7 @@ import {
   Send,
   Settings,
   Tag,
+  Building2,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -54,6 +55,11 @@ const sidebarItems = [
     name: "Disparos",
     href: "/disparos",
     icon: Send,
+  },
+  {
+    name: "BMs",
+    href: "/bms",
+    icon: Building2,
   },
   {
     name: "Relatórios",

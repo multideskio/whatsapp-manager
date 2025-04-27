@@ -21,6 +21,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+// Dados de exemplo para as BMs
+const businessManagers = [
+  { id: "1", name: "BM Principal" },
+  { id: "2", name: "BM Secundária" },
+]
+
 export function NewTemplateModal({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   const [variables, setVariables] = useState<string[]>([])
@@ -59,6 +65,21 @@ export function NewTemplateModal({ children }: { children: React.ReactNode }) {
             <div className="space-y-2">
               <Label htmlFor="template-name">Nome do template *</Label>
               <Input id="template-name" placeholder="Ex: Boas-vindas" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="template-bm">Business Manager *</Label>
+              <Select>
+                <SelectTrigger id="template-bm">
+                  <SelectValue placeholder="Selecione uma BM" />
+                </SelectTrigger>
+                <SelectContent>
+                  {businessManagers.map((bm) => (
+                    <SelectItem key={bm.id} value={bm.id}>
+                      {bm.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="template-language">Idioma *</Label>
